@@ -14,7 +14,7 @@ If you want to build the Python bindings as well, you will need to additionally 
 
 You can install these dependencies using `mamba` (or `conda`).
 
-`mamba install cmake xtensor pybind11 -c conda-forge`
+`mamba install cxx-compiler cmake xtensor pybind11 -c conda-forge`
 
 Then you can build the project by doing
 
