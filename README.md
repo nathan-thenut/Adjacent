@@ -6,6 +6,26 @@ It is heavily inspired by [NoteCAD](https://github.com/NoteCAD/NoteCAD) by [Alex
 
 Adjacant comes with a C++ and a Python interface.
 
+Installation
+------------
+
+For the installation, you need `cmake`, `xtensor`, `xtl`, and a recent C++ compiler.
+If you want to build the Python bindings as well, you will need to additionally install `pybind11`.
+
+You can install these dependencies using `mamba` (or `conda`).
+
+`mamba install cmake xtensor pybind11 -c conda-forge`
+
+Then you can build the project by doing
+
+```
+conda activate
+mkdir build; cd build
+cmake .. -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
+make
+make install
+```
+
 Python examples
 ---------------
 
