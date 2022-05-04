@@ -741,6 +741,7 @@ public:
     EquationSystem sys;
 
     std::set<EntityPtr> entities;
+    std::set<ExprPtr> expressions;
     std::set<ConstraintPtr> constraints;
 
     void add_entity(const EntityPtr& e)
@@ -748,6 +749,14 @@ public:
         if (entities.find(e) != entities.end())
             return;
         entities.insert(e);
+        mark_dirty(/*topo*/ true, /*constraints*/ false, /*entities*/ true, /*loops*/ false);
+    }
+
+    void remove_entity(const EntityPtr& e)
+    {
+        if (entities.find(e) == entities.end())
+            return;
+        entities.erase(e);
         mark_dirty(/*topo*/ true, /*constraints*/ false, /*entities*/ true, /*loops*/ false);
     }
 
@@ -770,6 +779,66 @@ public:
                    /*entities*/ false,
                    /*loops*/ false);
         constraintsTopologyChanged = true;
+    }
+
+    void remove_constraint(const ConstraintPtr& c)
+    {
+        if (constraints.find(c) == constraints.end())
+            return;
+        constraints.erase(c);
+        mark_dirty(/*topo*/ c->type == PointsCoincident,
+                   /*constraints*/ true,
+                   /*entities*/ false,
+                   /*loops*/ false);
+        constraintsTopologyChanged = true;
+    }
+
+    void add_expression(const ExprPtr& e)
+    {
+        if (expressions.find(e) != expressions.end())
+            return;
+        expressions.insert(e);
+        mark_dirty(/*topo*/ true, /*constraints*/ false, /*entities*/ false, /*loops*/ false);
+        constraintsTopologyChanged = true; // unsure?
+    }
+
+    void remove_expression(const ExprPtr& e)
+    {
+        if (expressions.find(e) == expressions.end())
+            return;
+        expressions.erase(e);
+        mark_dirty(/*topo*/ true, /*constraints*/ false, /*entities*/ false, /*loops*/ false);
+        constraintsTopologyChanged = true; // unsure?
+    }
+
+    void add_expressionVector(const ExpVectorPtr& e)
+    {
+        if (expressions.find(e->x) != expressions.end())
+            return;
+        expressions.insert(e->x);
+        if (expressions.find(e->y) != expressions.end())
+            return;
+        expressions.insert(e->y);
+        if (expressions.find(e->z) != expressions.end())
+            return;
+        expressions.insert(e->z);
+        mark_dirty(/*topo*/ true, /*constraints*/ false, /*entities*/ false, /*loops*/ false);
+        constraintsTopologyChanged = true; // unsure?
+    }
+
+    void remove_expressionVector(const ExpVectorPtr& e)
+    {
+        if (expressions.find(e->x) == expressions.end())
+            return;
+        expressions.erase(e->x);
+        if (expressions.find(e->y) == expressions.end())
+            return;
+        expressions.erase(e->y);
+        if (expressions.find(e->z) == expressions.end())
+            return;
+        expressions.erase(e->z);
+        mark_dirty(/*topo*/ true, /*constraints*/ false, /*entities*/ false, /*loops*/ false);
+        constraintsTopologyChanged = true; // unsure?
     }
 
     bool is_dirty() const
@@ -798,7 +867,7 @@ public:
         {
             supressSolve = false;
         }
-        if (is_topology_changed())
+        if (is_topology_changed() || constraintsTopologyChanged)
         {
             sys.clear();
             generate_equations(sys);
@@ -808,10 +877,19 @@ public:
         {
             supressSolve = true;
         }
+        topologyChanged = false;
+        constraintsChanged = false;
+        constraintsTopologyChanged = false;
+        entitiesChanged = false;
+        loopsChanged = false;
     }
 
     void generate_equations(EquationSystem& system)
     {
+        for (const auto& e : expressions)
+        {
+            system.add_equation(e);
+        }
         for (const auto& en : entities)
         {
             system.add_parameters(en->parameters());

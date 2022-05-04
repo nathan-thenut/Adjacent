@@ -27,7 +27,7 @@ public:
     ExpVector(const double (&v)[3]);
     ExpVector(const std::shared_ptr<Expr>& x, const std::shared_ptr<Expr>& y,
               const std::shared_ptr<Expr>& z);
-
+    ExpVector(const Op& op, const std::shared_ptr<ExpVector>& A, const std::shared_ptr<ExpVector>& B);
     // constructor from eigen etc.
     // public static implicit operator ExpVector(Vector3 v) {
     //  return  ExpVector(v.x, v.y, v.z);

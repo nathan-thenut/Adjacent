@@ -45,6 +45,11 @@ public:
         return "Point(" + x->to_string() + ", " + y->to_string() + ", " + z->to_string() + ")";
     }
 
+    std::vector<double> to_vector()
+    {
+        return { x->value(), y->value(), z->value() };
+    }
+
     ExpVector expr()
     {
         if (exp_ == nullptr)
@@ -54,6 +59,16 @@ public:
         // TODO transform
         return *exp_;
     }
+
+    std::shared_ptr<ExpVector> drag_to(const std::shared_ptr<ExpVector>& to)
+    {
+      expr();
+      return std::make_shared<ExpVector>(Op::Drag, exp_, to);
+    }
+
+    // ExpVector create_drag(PointE& drag){
+    //   std:Expr drag_x = x->expr()-drag->x->expr();
+    // }
 
     bool is_changed()
     {
@@ -148,6 +163,17 @@ public:
     ExprPtr length()
     {
         return PI2_E * radius();
+    }
+
+    ExpVectorPtr drag_center_to(const ExpVectorPtr& to)
+    {
+      _center.expr();
+     return std::make_shared<ExpVector>(Op::Drag, _center.exp_, to);
+    }
+
+    ExprPtr drag_radius_to(const ExprPtr& to)
+    {
+     return std::make_shared<Expr>(Op::Drag, _radius->expr(), to);
     }
 
     ExpVectorPtr point_on(const ExprPtr& t)

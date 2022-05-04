@@ -16,6 +16,13 @@ ExpVector::ExpVector(const double (&v)[3])
 {
 }
 
+ExpVector::ExpVector(const Op& op, const std::shared_ptr<ExpVector>& A, const std::shared_ptr<ExpVector>& B)
+: x(std::make_shared<Expr>(Op::Drag, A->x, B->x))
+, y(std::make_shared<Expr>(Op::Drag, A->y, B->y))
+, z(std::make_shared<Expr>(Op::Drag, A->z, B->z))
+{
+}
+
 std::shared_ptr<Expr> ExpVector::magnitude() const
 {
     return sqrt(sqr(x) + sqr(y) + sqr(z));

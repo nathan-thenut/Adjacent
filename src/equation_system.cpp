@@ -346,8 +346,8 @@ SolveResult EquationSystem::solve()
             if (steps > 0)
             {
                 dof_changed = true;
-                std::cout << "Solved " << equations.size() << " equations with "
-                          << current_params.size() << " unknowns in " << steps << " steps.\n";
+                // std::cout << "Solved " << equations.size() << " equations with "
+                //           << current_params.size() << " unknowns in " << steps << " steps.\n";
             }
             stats += "eqs: " + std::to_string(equations.size())
                      + "\nnunkn: " + std::to_string(current_params.size());
@@ -367,7 +367,6 @@ SolveResult EquationSystem::solve()
                     std::cout << current_params[i]->to_string() << std::endl;
                 }
             }
-
             return SolveResult::OKAY;
         }
         eval_jacobian(J, A, !is_drag_step);
