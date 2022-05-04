@@ -18,7 +18,8 @@ enum CONSTRAINT_TYPE
     HV,
     Angle,
     Diameter,
-    Tangent
+    Tangent,
+    Equal
 };
 
 class Constraint;
@@ -265,6 +266,40 @@ public:
     std::vector<ExprPtr> equations()
     {
         return { entity->length() - value->expr() };
+    }
+};
+
+
+class EqualConstraint : public ValueConstraint
+{
+public:
+    std::shared_ptr<Entity> e1, e2;
+
+    EqualConstraint(std::shared_ptr<LineE> e1, std::shared_ptr<LineE> e2)
+        : ValueConstraint(CONSTRAINT_TYPE::Equal, 1)
+        , e1(e1)
+        , e2(e2)
+    {
+        entities.push_back(e1.get());
+        entities.push_back(e2.get());
+        satisfy();  // does this make sense here?
+        value->set_value(1);
+    }
+
+    EqualConstraint(std::shared_ptr<LineE> e1, std::shared_ptr<LineE> e2, double factor)
+        : ValueConstraint(CONSTRAINT_TYPE::Equal, factor)
+        , e1(e1)
+        , e2(e2)
+    {
+        entities.push_back(e1.get());
+        entities.push_back(e2.get());
+        satisfy();  // does this make sense here?
+        value->set_value(factor);
+    }
+
+    std::vector<ExprPtr> equations()
+    {
+        return { e1->length() - e2->length()*value->expr() };
     }
 };
 
