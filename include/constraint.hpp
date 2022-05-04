@@ -320,6 +320,7 @@ public:
         entities.push_back(p0.get());
         entities.push_back(p1.get());
         satisfy();
+        value->set_value(d);
     }
 
     PointsDistanceConstraint(const std::shared_ptr<LineE>& line, double d)
@@ -329,6 +330,7 @@ public:
     {
         entities.push_back(line.get());
         satisfy();
+        value->set_value(d);
     }
 
     std::vector<ExprPtr> equations()
