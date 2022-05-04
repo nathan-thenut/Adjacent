@@ -1,0 +1,7 @@
+.ccls-cache/
+build/
+compile_commands.json
+*.o
+*.a
+*.wasm
+web/lib.js
