@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.1)
 project(adjacent)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 option(BUILD_PYTHON_BINDINGS "Build Python bindings" ON)
 
