@@ -94,6 +94,10 @@ PYBIND11_MODULE(adjacent_api, m)
     py::class_<ParallelConstraint, Constraint, std::shared_ptr<ParallelConstraint>>(sub, "Parallel")
         .def(py::init<std::shared_ptr<LineE>&, std::shared_ptr<LineE>&>());
 
+    py::class_<OrthogonalConstraint, Constraint, std::shared_ptr<OrthogonalConstraint>>(
+        sub, "Orthogonal")
+        .def(py::init<std::shared_ptr<LineE>&, std::shared_ptr<LineE>&>());
+
     py::class_<TangentConstraint, Constraint, std::shared_ptr<TangentConstraint>>(sub, "Tangent")
         .def(py::init<std::shared_ptr<CircleE>&, std::shared_ptr<LineE>&>());
 
@@ -104,14 +108,16 @@ PYBIND11_MODULE(adjacent_api, m)
         .def("__repr__", &Expr::to_string);
 
     py::class_<ExpVector, std::shared_ptr<ExpVector>>(m, "ExprVector")
-        .def("__repr__", [](ExpVector& self) -> std::string {
-            std::string res = "{\n";
-            res += self.x->to_string() + "\n";
-            res += self.y->to_string() + "\n";
-            res += self.z->to_string() + "\n";
-            res += "}";
-            return res;
-        });
+        .def("__repr__",
+             [](ExpVector& self) -> std::string
+             {
+                 std::string res = "{\n";
+                 res += self.x->to_string() + "\n";
+                 res += self.y->to_string() + "\n";
+                 res += self.z->to_string() + "\n";
+                 res += "}";
+                 return res;
+             });
 
     // py::implicitly_convertible<LineE, Entity>();
     // py::implicitly_convertible<PointE, Entity>();

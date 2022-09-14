@@ -13,6 +13,7 @@ enum CONSTRAINT_TYPE
     PointOn,
     PointsCoincident,
     Parallel,
+    Orthogonal,
     Length,
     PointsDistance,
     HV,
@@ -249,6 +250,34 @@ public:
     }
 };
 
+
+class OrthogonalConstraint : public Constraint
+{
+public:
+    std::shared_ptr<Entity> l0, l1;
+
+    OrthogonalConstraint(std::shared_ptr<LineE>& l0, std::shared_ptr<LineE>& l1)
+        : Constraint(CONSTRAINT_TYPE::Orthogonal)
+        , l0(l0)
+        , l1(l1)
+    {
+        entities.push_back(l0.get());
+        entities.push_back(l1.get());
+    }
+
+    std::vector<ExprPtr> equations()
+    {
+        ExpVector d0 = *l0->point_on(zero) - *l0->point_on(one);
+        ExpVector d1 = *l1->point_on(zero) - *l1->point_on(one);
+        return { d0.x * d1.x + d0.y * d1.y };
+    }
+
+    std::vector<ParamPtr> parameters()
+    {
+        return {};
+    }
+};
+
 class LengthConstraint : public ValueConstraint
 {
 public:
@@ -299,7 +328,7 @@ public:
 
     std::vector<ExprPtr> equations()
     {
-        return { e1->length() - e2->length()*value->expr() };
+        return { e1->length() - e2->length() * value->expr() };
     }
 };
 
@@ -799,7 +828,7 @@ public:
             return;
         expressions.insert(e);
         mark_dirty(/*topo*/ true, /*constraints*/ false, /*entities*/ false, /*loops*/ false);
-        constraintsTopologyChanged = true; // unsure?
+        constraintsTopologyChanged = true;  // unsure?
     }
 
     void remove_expression(const ExprPtr& e)
@@ -808,7 +837,7 @@ public:
             return;
         expressions.erase(e);
         mark_dirty(/*topo*/ true, /*constraints*/ false, /*entities*/ false, /*loops*/ false);
-        constraintsTopologyChanged = true; // unsure?
+        constraintsTopologyChanged = true;  // unsure?
     }
 
     void add_expressionVector(const ExpVectorPtr& e)
@@ -823,7 +852,7 @@ public:
             return;
         expressions.insert(e->z);
         mark_dirty(/*topo*/ true, /*constraints*/ false, /*entities*/ false, /*loops*/ false);
-        constraintsTopologyChanged = true; // unsure?
+        constraintsTopologyChanged = true;  // unsure?
     }
 
     void remove_expressionVector(const ExpVectorPtr& e)
@@ -838,7 +867,7 @@ public:
             return;
         expressions.erase(e->z);
         mark_dirty(/*topo*/ true, /*constraints*/ false, /*entities*/ false, /*loops*/ false);
-        constraintsTopologyChanged = true; // unsure?
+        constraintsTopologyChanged = true;  // unsure?
     }
 
     bool is_dirty() const
