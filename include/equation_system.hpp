@@ -72,6 +72,11 @@ public:
                        bool clear_drag);
     void solve_least_squares(const xt::xtensor<double, 2>& A, const xt::xtensor<double, 1>& B,
                              xt::xtensor<double, 1>& X);
+
+    void solve_linear_program(const xt::xtensor<double, 2>& A, const xt::xtensor<double, 1>& B,
+                              xt::xtensor<double, 1>& X);
+
+
     void clear();
 
     bool test_rank(int& dof);

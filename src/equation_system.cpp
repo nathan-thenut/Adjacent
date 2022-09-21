@@ -218,6 +218,13 @@ void EquationSystem::solve_least_squares(const xt::xtensor<double, 2>& A,
     }
 }
 
+void EquationSystem::solve_linear_program(const xt::xtensor<double, 2>& A,
+                                          const xt::xtensor<double, 1>& B,
+                                          xt::xtensor<double, 1>& X)
+{
+}
+
+
 void EquationSystem::clear()
 {
     parameters.clear();
