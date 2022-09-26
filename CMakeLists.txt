@@ -38,4 +38,10 @@ if (BUILD_PYTHON_BINDINGS)
 	    src/py_interface.cpp
 	)
 	target_link_libraries(adjacent_api PUBLIC pybind11::pybind11 adjacent_lib)
+
+    add_custom_command(TARGET adjacent_api
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:adjacent_api> ${PROJECT_SOURCE_DIR}/adjacent_python_tests
+    )
+
 endif()

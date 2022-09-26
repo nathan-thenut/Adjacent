@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "adjacent-python-tests"
+version = "0.1.0"
+description = "Visualizing results from Adjacent via python."
+authors = ["Nathan Eikermann <tensazangetsu1990@googlemail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+matplotlib = "^3.6.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,4 +1,4 @@
-from build.adjacent_api import *
+from adjacent_api import *
 import math
 
 # Adjacent computes everything symbolically so we need to create named parameters
