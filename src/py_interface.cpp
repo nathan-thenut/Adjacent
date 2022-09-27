@@ -33,7 +33,10 @@ PYBIND11_MODULE(adjacent_api, m)
              [](PointE& p) {
                  return std::vector<double>({ p.x->value(), p.y->value() });
              })
-        .def("__repr__", &PointE::to_string);
+        .def("__repr__", &PointE::to_string)
+        .def("x", [](PointE& p) { return p.x->value(); })
+        .def("y", [](PointE& p) { return p.y->value(); })
+        .def("z", [](PointE& p) { return p.z->value(); });
 
     py::class_<LineE, Entity, std::shared_ptr<LineE>>(m, "Line")
         .def(py::init<PointE, PointE>())

@@ -1,14 +1,8 @@
-from adjacent_api import *
 import math
+import matplotlib.pyplot as plt
+import numpy as np
 
-# Adjacent computes everything symbolically so we need to create named parameters
-
-x = Param("x", 0.0)
-y = Param("y", 5.0)
-z = Param("z", 1.0)
-
-# Now we can create a point at (0, 5, 1)
-p1 = Point(x, y, z)
+from adjacent_api import *
 
 
 # helper function
@@ -19,6 +13,7 @@ def point(name, xyz=(0, 0, 0)):
                  Param(f"{name}_z", xyz[2]))
 
 
+p1 = point("p1", (0, 5, 1))
 p2 = point("p2", (3, 1, 2))
 p3 = point("p3", (5, 5, 9))
 p4 = point("p4", (1, 2, 9))
@@ -27,7 +22,7 @@ p5 = point("cc1", (1, 1))
 p6 = point("p6", (0, 1, 0))
 p7 = point("p7", (4, 1, 0))
 
-p8 = point("p8", (2, 3, 0))
+p8 = point("p8", (1, 3, 0))
 p9 = point("p9", (2, 0, 0))
 
 l1 = Line(p1, p2)
@@ -36,6 +31,37 @@ c1 = Circle(p5, Param("rad1", 1.2))
 
 l3 = Line(p6, p7)
 l4 = Line(p8, p9)
+
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+l1x = [l1.source().x(), l1.target().x()]
+l1y = [l1.source().y(), l1.target().y()]
+l1z = [l1.source().z(), l1.target().z()]
+
+ax.scatter(l1x, l1y, l1z)
+ax.plot(l1x, l1y, l1z, label='l1')
+
+l2x = [5, 1]
+l2y = [5, 2]
+l2z = [9, 9]
+ax.scatter(l2x, l2y, l2z)
+ax.plot(l2x, l2y, l2z, label='l2')
+
+l3x = [0, 4]
+l3y = [1, 1]
+l3z = [0, 0]
+ax.scatter(l3x, l3y, l3z)
+ax.plot(l3x, l3y, l3z, label='l3')
+
+l4x = [1, 2]
+l4y = [3, 0]
+l4z = [0, 0]
+ax.scatter(l4x, l4y, l4z)
+ax.plot(l4x, l4y, l4z, label='l4')
+
+plt.legend()
+plt.show()
 
 s = Sketch()
 
