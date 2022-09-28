@@ -7,10 +7,22 @@ from adjacent_api import *
 
 # helper function
 def point(name, xyz=(0, 0, 0)):
+    """Creates a point using Adjacent's point entity."""
     if len(xyz) <= 2:
         xyz = (*xyz, 0)
     return Point(Param(f"{name}_x", xyz[0]), Param(f"{name}_y", xyz[1]),
                  Param(f"{name}_z", xyz[2]))
+
+
+def add_lines_to_plot(figure_or_ax, lines: dict[str, Line]):
+    """Adds Lines from Adjacent to a matplotlib plot."""
+    for key in lines.keys():
+        l_x = [lines[key].source().x(), lines[key].target().x()]
+        l_y = [lines[key].source().y(), lines[key].target().y()]
+        l_z = [lines[key].source().z(), lines[key].target().z()]
+
+        figure_or_ax.scatter(l_x, l_y, l_z)
+        figure_or_ax.plot(l_x, l_y, l_z, label=key)
 
 
 p1 = point("p1", (0, 5, 1))
@@ -33,35 +45,15 @@ l3 = Line(p6, p7)
 l4 = Line(p8, p9)
 
 fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
+ax = fig.add_subplot(121, projection='3d')
+ax.set_title("Before")
+lines = {}
+lines["l1"] = l1
+lines["l2"] = l2
+lines["l3"] = l3
+lines["l4"] = l4
 
-l1x = [l1.source().x(), l1.target().x()]
-l1y = [l1.source().y(), l1.target().y()]
-l1z = [l1.source().z(), l1.target().z()]
-
-ax.scatter(l1x, l1y, l1z)
-ax.plot(l1x, l1y, l1z, label='l1')
-
-l2x = [5, 1]
-l2y = [5, 2]
-l2z = [9, 9]
-ax.scatter(l2x, l2y, l2z)
-ax.plot(l2x, l2y, l2z, label='l2')
-
-l3x = [0, 4]
-l3y = [1, 1]
-l3z = [0, 0]
-ax.scatter(l3x, l3y, l3z)
-ax.plot(l3x, l3y, l3z, label='l3')
-
-l4x = [1, 2]
-l4y = [3, 0]
-l4z = [0, 0]
-ax.scatter(l4x, l4y, l4z)
-ax.plot(l4x, l4y, l4z, label='l4')
-
-plt.legend()
-plt.show()
+add_lines_to_plot(ax, lines)
 
 s = Sketch()
 
@@ -99,6 +91,13 @@ s.add_constraint(constraints.Length(l4, 4))
 s.add_constraint(constraints.Orthogonal(l3, l4))
 # And solve!
 s.update()
+
+ax2 = fig.add_subplot(122, projection='3d')
+ax2.set_title("After")
+add_lines_to_plot(ax2, lines)
+
+plt.legend()
+plt.show()
 
 print("L1: ", l1)
 print("L2: ", l2)
