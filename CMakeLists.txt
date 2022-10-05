@@ -12,10 +12,12 @@ set(PYTHON_LIBRARIES $ENV{CONDA_PREFIX}/lib/)
 find_package(xtl REQUIRED)
 find_package(xtensor REQUIRED)
 find_package(pybind11 REQUIRED)
+find_package(ortools REQUIRED)
 
 include_directories(include)
 include_directories(${xtl_INCLUDE_DIRS})
 include_directories(${xtensor_INCLUDE_DIRS})
+include_directories(${ortools_INCLUDE_DIRS})
 
 add_library(adjacent_lib
 	src/expression.cpp
@@ -25,7 +27,7 @@ add_library(adjacent_lib
 	src/expr_basis.cpp
 )
 
-target_link_libraries(adjacent_lib)
+target_link_libraries(adjacent_lib ortools)
 
 add_executable(adjacent_test
 	src/test.cpp

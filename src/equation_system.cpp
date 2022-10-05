@@ -1,8 +1,11 @@
 #include <vector>
 #include <unordered_map>
+#include <memory>
 
 #include <xtensor/xtensor.hpp>
 #include <xtensor/xio.hpp>
+#include <ortools/linear_solver/linear_solver.h>
+
 #include "expression.hpp"
 #include "expression_vector.hpp"
 #include "gaussian_method.hpp"
@@ -218,10 +221,20 @@ void EquationSystem::solve_least_squares(const xt::xtensor<double, 2>& A,
     }
 }
 
+namespace operations_research
+{
+    void glop_solve(const xt::xtensor<double, 2>& A, const xt::xtensor<double, 1>& B,
+                    xt::xtensor<double, 1>& X)
+    {
+        std::unique_ptr<MPSolver> solver(MPSolver::CreateSolver("GLOP"));
+    }
+}
+
 void EquationSystem::solve_linear_program(const xt::xtensor<double, 2>& A,
                                           const xt::xtensor<double, 1>& B,
                                           xt::xtensor<double, 1>& X)
 {
+    operations_research::glop_solve(A, B, X);
 }
 
 
