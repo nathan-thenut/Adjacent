@@ -5,6 +5,7 @@
 #include <xtensor/xtensor.hpp>
 #include <xtensor/xio.hpp>
 #include <ortools/linear_solver/linear_solver.h>
+#include <ortools/linear_solver/linear_solver.pb.h>
 
 #include "expression.hpp"
 #include "expression_vector.hpp"
@@ -226,7 +227,45 @@ namespace operations_research
     void glop_solve(const xt::xtensor<double, 2>& A, const xt::xtensor<double, 1>& B,
                     xt::xtensor<double, 1>& X)
     {
-        std::unique_ptr<MPSolver> solver(MPSolver::CreateSolver("GLOP"));
+        std::size_t rows = A.shape(0);
+        std::size_t cols = A.shape(1);
+        std::size_t num_vars = X.shape(0);
+        std::size_t num_constraints = B.shape(0);
+
+        const double infinity = MPSolver::infinity();
+        MPModelProto model_proto;
+        model_proto.set_name("L1_Minimization");
+
+        for (int i = 0; i < num_vars; i++)
+        {
+            MPVariableProto* x = model_proto.add_variable();
+            x->set_name("x" + std::to_string(i));
+            x->set_lower_bound(0.0);
+            x->set_upper_bound(infinity);
+            x->set_is_integer(false);
+            x->set_objective_coefficient(1.0);
+        }
+        model_proto.set_maximize(false);
+
+        for (int i = 0; i < num_constraints; i++)
+        {
+            MPConstraintProto* constraint_proto = model_proto.add_constraint();
+            constraint_proto->set_name("c" + std::to_string(i));
+            constraint_proto->set_lower_bound(B(i));
+            constraint_proto->set_upper_bound(B(i));
+            // TODO: add variable coefficients
+        }
+
+        MPModelRequest model_request;
+        model_request.set_solver_type(MPModelRequest::GLOP_LINEAR_PROGRAMMING);
+        MPSolutionResponse solution_response;
+        MPSolver::SolveWithProto(model_request, &solution_response);
+
+        CHECK_EQ(MPSOLVER_OPTIMAL, solution_response.status());
+        for (int i = 0; i < num_vars; i++)
+        {
+            X(i) = solution_response.variable_value(i);
+        }
     }
 }
 
