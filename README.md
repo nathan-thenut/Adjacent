@@ -9,12 +9,13 @@ Adjacant comes with a C++ and a Python interface.
 Installation
 ------------
 
-For the installation, you need `cmake`, `xtensor`, `xtl`, and a recent C++ compiler.
+For the installation, you need `cmake`, `xtensor`, `xtl`, `or-tools`, `eigen`
+and a recent C++ compiler.
 If you want to build the Python bindings as well, you will need to additionally install `pybind11`.
 
 You can install these dependencies using `mamba` (or `conda`).
 
-`mamba install cxx-compiler cmake xtensor pybind11 -c conda-forge`
+`mamba install cxx-compiler cmake xtensor pybind11 ortools-cpp eigen -c conda-forge`
 
 Then you can build the project by doing
 
