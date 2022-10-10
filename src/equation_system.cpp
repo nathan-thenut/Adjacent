@@ -232,10 +232,16 @@ namespace operations_research
         std::size_t num_vars = X.shape(0);
         std::size_t num_constraints = B.shape(0);
 
+        std::cout << "Rows: " << rows << "\n";
+        std::cout << "Cols: " << cols << "\n";
+        std::cout << "Number of variables: " << num_vars << "\n";
+        std::cout << "Number of constraints: " << num_constraints << "\n";
+
         const double infinity = MPSolver::infinity();
         MPModelProto model_proto;
         model_proto.set_name("L1_Minimization");
 
+        // add variables
         for (int i = 0; i < num_vars; i++)
         {
             MPVariableProto* x = model_proto.add_variable();
@@ -245,27 +251,46 @@ namespace operations_research
             x->set_is_integer(false);
             x->set_objective_coefficient(1.0);
         }
+        // minimize the objective function
         model_proto.set_maximize(false);
 
-        for (int i = 0; i < num_constraints; i++)
+        std::cout << "Test 1 "
+                  << "\n";
+
+        // add constraints
+        for (int j = 0; j < num_constraints; j++)
         {
             MPConstraintProto* constraint_proto = model_proto.add_constraint();
-            constraint_proto->set_name("c" + std::to_string(i));
-            constraint_proto->set_lower_bound(B(i));
-            constraint_proto->set_upper_bound(B(i));
-            // TODO: add variable coefficients
+            constraint_proto->set_name("c" + std::to_string(j));
+            constraint_proto->set_lower_bound(-infinity);
+            constraint_proto->set_upper_bound(B(j));
+            // add variable coefficients to the constraint
+            for (int k = 0; k < num_vars; k++)
+            {
+                constraint_proto->add_var_index(k);
+                constraint_proto->add_coefficient(A(j, k));
+            }
         }
 
+        std::cout << "Test 2 "
+                  << "\n";
+
         MPModelRequest model_request;
+        *model_request.mutable_model() = model_proto;
+        // set solver to glop
         model_request.set_solver_type(MPModelRequest::GLOP_LINEAR_PROGRAMMING);
         MPSolutionResponse solution_response;
         MPSolver::SolveWithProto(model_request, &solution_response);
 
-        CHECK_EQ(MPSOLVER_OPTIMAL, solution_response.status());
+        std::cout << "Test 3 "
+                  << "\n";
+        // CHECK_EQ(MPSOLVER_OPTIMAL, solution_response.status());
         for (int i = 0; i < num_vars; i++)
         {
             X(i) = solution_response.variable_value(i);
         }
+        std::cout << "Test 4 "
+                  << "\n";
     }
 }
 
@@ -429,7 +454,8 @@ SolveResult EquationSystem::solve()
             return SolveResult::OKAY;
         }
         eval_jacobian(J, A, !is_drag_step);
-        solve_least_squares(A, B, X);
+        // solve_least_squares(A, B, X);
+        solve_linear_program(A, B, X);
 
         for (int i = 0; i < current_params.size(); i++)
         {
