@@ -6,3 +6,4 @@ compile_commands.json
 *.a
 *.wasm
 web/lib.js
+*/__pycache__

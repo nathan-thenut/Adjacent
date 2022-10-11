@@ -240,6 +240,7 @@ namespace operations_research
         const double infinity = MPSolver::infinity();
         MPModelProto model_proto;
         model_proto.set_name("L1_Minimization");
+        std::string equations;
 
         // add variables
         for (int i = 0; i < num_vars; i++)
@@ -254,43 +255,48 @@ namespace operations_research
         // minimize the objective function
         model_proto.set_maximize(false);
 
-        std::cout << "Test 1 "
-                  << "\n";
-
         // add constraints
         for (int j = 0; j < num_constraints; j++)
         {
             MPConstraintProto* constraint_proto = model_proto.add_constraint();
             constraint_proto->set_name("c" + std::to_string(j));
-            constraint_proto->set_lower_bound(-infinity);
+            constraint_proto->set_lower_bound(B(j));
             constraint_proto->set_upper_bound(B(j));
             // add variable coefficients to the constraint
             for (int k = 0; k < num_vars; k++)
             {
-                constraint_proto->add_var_index(k);
-                constraint_proto->add_coefficient(A(j, k));
+                double coefficient = A(j, k);
+                if (coefficient > 0)
+                {
+                    constraint_proto->add_var_index(k);
+                    constraint_proto->add_coefficient(coefficient);
+                    equations += std::to_string(coefficient) + "x" + std::to_string(k) + " ";
+                }
             }
+            equations += "= " + std::to_string(B(j)) + "\n";
         }
-
-        std::cout << "Test 2 "
-                  << "\n";
 
         MPModelRequest model_request;
         *model_request.mutable_model() = model_proto;
         // set solver to glop
-        model_request.set_solver_type(MPModelRequest::GLOP_LINEAR_PROGRAMMING);
+        model_request.set_solver_type(MPModelRequest::CLP_LINEAR_PROGRAMMING);
         MPSolutionResponse solution_response;
         MPSolver::SolveWithProto(model_request, &solution_response);
 
-        std::cout << "Test 3 "
-                  << "\n";
         // CHECK_EQ(MPSOLVER_OPTIMAL, solution_response.status());
-        for (int i = 0; i < num_vars; i++)
+        if (solution_response.status() == MPSOLVER_OPTIMAL
+            || solution_response.status() == MPSOLVER_FEASIBLE)
         {
-            X(i) = solution_response.variable_value(i);
+            for (int i = 0; i < num_vars; i++)
+            {
+                X(i) = solution_response.variable_value(i);
+            }
         }
-        std::cout << "Test 4 "
-                  << "\n";
+        else
+        {
+            std::cout << "No solution found for the following system:" << std::endl
+                      << equations << std::endl;
+        }
     }
 }
 
