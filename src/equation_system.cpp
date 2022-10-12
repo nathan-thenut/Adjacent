@@ -227,13 +227,9 @@ namespace operations_research
     void glop_solve(const xt::xtensor<double, 2>& A, const xt::xtensor<double, 1>& B,
                     xt::xtensor<double, 1>& X)
     {
-        std::size_t rows = A.shape(0);
-        std::size_t cols = A.shape(1);
         std::size_t num_vars = X.shape(0);
         std::size_t num_constraints = B.shape(0);
 
-        std::cout << "Rows: " << rows << "\n";
-        std::cout << "Cols: " << cols << "\n";
         std::cout << "Number of variables: " << num_vars << "\n";
         std::cout << "Number of constraints: " << num_constraints << "\n";
 
@@ -242,15 +238,26 @@ namespace operations_research
         model_proto.set_name("L1_Minimization");
         std::string equations;
 
-        // add variables
+        // add positive variables
         for (int i = 0; i < num_vars; i++)
         {
-            MPVariableProto* x = model_proto.add_variable();
-            x->set_name("x" + std::to_string(i));
-            x->set_lower_bound(0.0);
-            x->set_upper_bound(infinity);
-            x->set_is_integer(false);
-            x->set_objective_coefficient(1.0);
+            MPVariableProto* u = model_proto.add_variable();
+            u->set_name("u" + std::to_string(i));
+            u->set_lower_bound(0.0);
+            u->set_upper_bound(infinity);
+            u->set_is_integer(false);
+            u->set_objective_coefficient(1.0);
+        }
+
+        // add negative variables
+        for (int i = 0; i < num_vars; i++)
+        {
+            MPVariableProto* v = model_proto.add_variable();
+            v->set_name("v" + std::to_string(i));
+            v->set_lower_bound(0.0);
+            v->set_upper_bound(infinity);
+            v->set_is_integer(false);
+            v->set_objective_coefficient(1.0);
         }
         // minimize the objective function
         model_proto.set_maximize(false);
@@ -262,24 +269,39 @@ namespace operations_research
             constraint_proto->set_name("c" + std::to_string(j));
             constraint_proto->set_lower_bound(B(j));
             constraint_proto->set_upper_bound(B(j));
-            // add variable coefficients to the constraint
+
+            // add positive variable coefficients to the constraint
             for (int k = 0; k < num_vars; k++)
             {
                 double coefficient = A(j, k);
-                if (coefficient > 0)
+                if (coefficient != 0.0)
                 {
                     constraint_proto->add_var_index(k);
                     constraint_proto->add_coefficient(coefficient);
-                    equations += std::to_string(coefficient) + "x" + std::to_string(k) + " ";
+                    equations += std::to_string(coefficient) + "u" + std::to_string(k) + " ";
                 }
             }
+
+            // add negative variable coefficients to the constraint
+            for (int k = num_vars; k < (2 * num_vars); k++)
+            {
+                double coefficient = -A(j, (k - num_vars));
+                if (coefficient != 0.0)
+                {
+                    constraint_proto->add_var_index(k);
+                    constraint_proto->add_coefficient(coefficient);
+                    equations += std::to_string(coefficient) + "v" + std::to_string(k) + " ";
+                }
+            }
+
+
             equations += "= " + std::to_string(B(j)) + "\n";
         }
 
         MPModelRequest model_request;
         *model_request.mutable_model() = model_proto;
-        // set solver to glop
-        model_request.set_solver_type(MPModelRequest::CLP_LINEAR_PROGRAMMING);
+        // set solver to glop or clp
+        model_request.set_solver_type(MPModelRequest::GLOP_LINEAR_PROGRAMMING);
         MPSolutionResponse solution_response;
         MPSolver::SolveWithProto(model_request, &solution_response);
 
@@ -289,8 +311,22 @@ namespace operations_research
         {
             for (int i = 0; i < num_vars; i++)
             {
-                X(i) = solution_response.variable_value(i);
+                // x = u - v
+                double u = solution_response.variable_value(i);
+                double v = solution_response.variable_value(i + num_vars);
+                std::cout << model_proto.variable(i).name() << " = " << u << std::endl;
+                std::cout << model_proto.variable(i + num_vars).name() << " = " << v << std::endl;
+                X(i) = u - v;
             }
+
+            // print x for debugging output
+            std::string x_values = "X(";
+            for (int i = 0; i < num_vars; i++)
+            {
+                x_values += std::to_string(X(i)) + ", ";
+            }
+            x_values += ")";
+            std::cout << x_values << std::endl;
         }
         else
         {
@@ -460,8 +496,9 @@ SolveResult EquationSystem::solve()
             return SolveResult::OKAY;
         }
         eval_jacobian(J, A, !is_drag_step);
-        // solve_least_squares(A, B, X);
-        solve_linear_program(A, B, X);
+        // TODO: add switch
+        solve_least_squares(A, B, X);
+        // solve_linear_program(A, B, X);
 
         for (int i = 0; i < current_params.size(); i++)
         {

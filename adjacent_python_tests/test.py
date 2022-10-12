@@ -39,7 +39,7 @@ s = Sketch()
 
 s.add_entity(l1)
 s.add_entity(l2)
-s.add_entity(c1)
+#s.add_entity(c1)
 
 s.add_entity(l3)
 s.add_entity(l4)
@@ -48,9 +48,9 @@ DESIRED_ANGLE = -0.8 * math.pi
 
 # Let's add some constraints to the sketch
 s.add_constraint(constraints.Coincident(p2, p4))
-s.add_constraint(constraints.Diameter(c1, 2.5))
+#s.add_constraint(constraints.Diameter(c1, 2.5))
 
-s.add_constraint(constraints.Coincident(p1, p5))
+#s.add_constraint(constraints.Coincident(p1, p5))
 # s.add_constraint(constraints.Tangent(c1, l1))
 
 s.add_constraint(constraints.Length(l1, 5))

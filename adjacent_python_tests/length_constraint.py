@@ -24,8 +24,9 @@ s = Sketch()
 s.add_entity(l1)
 s.add_entity(l2)
 
-s.add_constraint(constraints.Length(l1, 4))
-s.add_constraint(constraints.Length(l2, 4))
+s.add_constraint(constraints.Length(l1, 6))
+s.add_constraint(constraints.Length(l2, 6))
+s.add_constraint(constraints.Orthogonal(l1, l2))
 # And solve!
 s.update()
 
