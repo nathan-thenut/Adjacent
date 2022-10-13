@@ -14,7 +14,9 @@ PYBIND11_MODULE(adjacent_api, m)
         .def(py::init<>())
         .def("add_entity", &Sketch::add_entity)
         .def("add_constraint", &Sketch::add_constraint)
-        .def("update", &Sketch::update);
+        .def("update", &Sketch::update)
+        .def("is_using_linear_program", &Sketch::is_using_linear_program)
+        .def("use_linear_program", &Sketch::use_linear_program);
 
     using Prm = Param<double>;
     py::class_<Prm, std::shared_ptr<Prm>>(m, "Param")

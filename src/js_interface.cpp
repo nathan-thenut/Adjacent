@@ -19,6 +19,8 @@ EMSCRIPTEN_BINDINGS(adjacent_api)
         .function("remove_expression", &Sketch::remove_expression)
         .function("add_expressionVector", &Sketch::add_expressionVector)
         .function("remove_expressionVector", &Sketch::remove_expressionVector)
+        .function("is_using_linear_program", &Sketch::is_using_linear_program)
+        .function("use_linear_program", &Sketch::use_linear_program)
         .function("update", &Sketch::update);
 
     using Prm = Param<double>;

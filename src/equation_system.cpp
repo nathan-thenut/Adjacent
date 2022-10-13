@@ -496,9 +496,14 @@ SolveResult EquationSystem::solve()
             return SolveResult::OKAY;
         }
         eval_jacobian(J, A, !is_drag_step);
-        // TODO: add switch
-        solve_least_squares(A, B, X);
-        // solve_linear_program(A, B, X);
+        if (use_linear_program)
+        {
+            solve_linear_program(A, B, X);
+        }
+        else
+        {
+            solve_least_squares(A, B, X);
+        }
 
         for (int i = 0; i < current_params.size(); i++)
         {

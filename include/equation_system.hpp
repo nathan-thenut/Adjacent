@@ -26,6 +26,7 @@ public:
     int max_steps = 20;
     int drag_steps = 3;
     bool revert_when_not_converged = true;
+    bool use_linear_program = false;
 
     std::string stats;
     bool dof_changed;

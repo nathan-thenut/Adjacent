@@ -890,6 +890,16 @@ public:
         return topologyChanged;
     }
 
+    bool is_using_linear_program() const
+    {
+        return sys.use_linear_program;
+    }
+
+    void use_linear_program(bool use_lp)
+    {
+        sys.use_linear_program = use_lp;
+    }
+
     void update()
     {
         if (is_constraints_changed() || is_entities_changed())
