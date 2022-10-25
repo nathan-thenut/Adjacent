@@ -1,4 +1,5 @@
 import json
+import numpy as np
 from enum import Enum
 from pathlib import Path
 from datetime import datetime
@@ -38,8 +39,8 @@ def add_lines_to_plot(figure_or_ax,
 
 
 def export_entities_to_dict(
-        lines: dict[str, Line],
-        points: dict[str, Point],
+        lines: dict[str, Line] = None,
+        points: dict[str, Point] = None,
         data: dict[str, dict] = None,
         result: Result = Result.ORIGINAL) -> dict[str, dict]:
     """Export Adjacent's Line entity to a dictionary."""
@@ -57,7 +58,7 @@ def export_entities_to_dict(
             target["x"] = lines[key].target().x()
             target["y"] = lines[key].target().y()
 
-            if not new_data["lines"]:
+            if key not in new_data["lines"].keys():
                 new_data["lines"][key] = {}
                 new_data["lines"][key]["points"] = {}
                 new_data["lines"][key]["points"]["source"] = {}
@@ -74,7 +75,7 @@ def export_entities_to_dict(
             pnt["x"] = points[key].x()
             pnt["y"] = points[key].y()
 
-            if not new_data["points"]:
+            if key not in new_data["points"].keys():
                 new_data["points"][key] = {}
                 new_data["points"][key][result.name] = {}
 
@@ -83,10 +84,43 @@ def export_entities_to_dict(
     return new_data
 
 
-def write_data_to_json(path: Path,
-                       data: dict[str, dict],
-                       timestamp: datetime = datetime.now()):
+def add_comparison_data(data: dict[str, dict]) -> dict[str, dict]:
+    """Add data to compare the different solutions."""
+    new_data = data
+    if "lines" in new_data.keys():
+        for line in new_data["lines"].keys():
+            points = new_data["lines"][line]["points"]
+            for pnt in points.keys():
+                add_comparison_data_to_point(points[pnt])
+    return new_data
+
+
+def add_comparison_data_to_point(point_data: dict[str, dict]):
+    """Add comparison data to a points results"""
+    original_data = point_data[Result.ORIGINAL.name]
+    for result in [Result.L1.name, Result.L2.name]:
+        if result in point_data.keys():
+            soc = calculate_sum_of_changes(original_data, point_data[result])
+            point_data[result]["sum_of_changes"] = soc
+
+
+def calculate_sum_of_changes(
+    original: dict[str, float],
+    new: dict[str, float],
+) -> float:
+    """Calculate the sum of changes between original and new data."""
+    return np.sum(
+        np.abs([
+            original["x"] - new["x"],
+            original["y"] - new["y"],
+        ]))
+
+
+def write_data_to_json_file(path: Path,
+                            data: dict[str, dict],
+                            timestamp: datetime = datetime.now()):
     """Writes data to a json file."""
-    filepath = path / timestamp.strftime("%Y-%m-%dT%H%M")
-    with open(filepath, "w") as file:
-        json.dumps(data, file)
+    filepath = path / (timestamp.strftime("%Y-%m-%dT%H%M") + ".json")
+    with open(filepath, "w", encoding="utf8") as file:
+        json_string = json.dumps(data, indent=2)
+        file.write(json_string)
