@@ -1,5 +1,6 @@
 import json
 import numpy as np
+import matplotlib.pyplot as plt
 from enum import Enum
 from pathlib import Path
 from datetime import datetime
@@ -10,6 +11,11 @@ class Result(Enum):
     ORIGINAL = 1
     L1 = 2
     L2 = 3
+
+
+class PyConstraints(Enum):
+    LENGTH = 1
+    ORTHOGONAL = 2
 
 
 # helper function
@@ -26,9 +32,11 @@ def add_lines_to_plot(figure_or_ax,
                       three_d: bool = False):
     """Adds Lines from Adjacent to a matplotlib plot."""
     for key in lines.keys():
-        l_x = [lines[key].source().x(), lines[key].target().x()]
-        l_y = [lines[key].source().y(), lines[key].target().y()]
-        l_z = [lines[key].source().z(), lines[key].target().z()]
+        source_coords = lines[key].source().eval()
+        target_coords = lines[key].target().eval()
+        l_x = [source_coords[0], target_coords[0]]
+        l_y = [source_coords[1], target_coords[1]]
+        l_z = [source_coords[2], target_coords[2]]
 
         if three_d:
             figure_or_ax.scatter(l_x, l_y, l_z)
@@ -52,11 +60,13 @@ def export_entities_to_dict(
             new_data["lines"] = {}
         for key in lines.keys():
             source = {}
-            source["x"] = lines[key].source().x()
-            source["y"] = lines[key].source().y()
+            source_values = lines[key].source().eval()
+            source["x"] = source_values[0]
+            source["y"] = source_values[1]
             target = {}
-            target["x"] = lines[key].target().x()
-            target["y"] = lines[key].target().y()
+            target_values = lines[key].target().eval()
+            target["x"] = target_values[0]
+            target["y"] = target_values[1]
 
             if key not in new_data["lines"].keys():
                 new_data["lines"][key] = {}
@@ -72,8 +82,9 @@ def export_entities_to_dict(
             new_data["points"] = {}
         for key in points.keys():
             pnt = {}
-            pnt["x"] = points[key].x()
-            pnt["y"] = points[key].y()
+            pnt_values = points[key].eval()
+            pnt["x"] = pnt_values[0]
+            pnt["y"] = pnt_values[1]
 
             if key not in new_data["points"].keys():
                 new_data["points"][key] = {}
@@ -161,3 +172,85 @@ def write_data_to_json_file(path: Path,
     with open(filepath, "w", encoding="utf8") as file:
         json_string = json.dumps(data, indent=2)
         file.write(json_string)
+
+
+def create_constraints(
+    lines: dict[str, Line],
+    points: dict[str, Point],
+    constraint_dict: dict[str, dict],
+) -> list[constraints.Constraint]:
+    """Create constraints from the given data."""
+    constraint_list = []
+    for key in constraint_dict.keys():
+        entities = []
+        for entity in constraint_dict[key]["entities"]:
+            if entity in lines.keys():
+                entities.append(lines[entity])
+            else:
+                entities.append(points[entity])
+
+        if constraint_dict[key]["type"] == PyConstraints.ORTHOGONAL:
+            constraint_list.append(constraints.Orthogonal(*entities))
+        elif constraint_dict[key]["type"] == PyConstraints.LENGTH:
+            value = constraint_dict[key]["value"]
+            constraint_list.append(constraints.Length(*entities, value))
+
+    return constraint_list
+
+
+def create_and_solve_sketch(lines_dict: dict[str, list[str]],
+                            points_dict: dict[str, tuple[int]],
+                            constraint_dict: dict[str, dict], json_path: Path):
+    """Creates an adjacent sketch and solves it."""
+    json_data = {}
+    fig = plt.figure()
+    subplot_int = 131
+
+    for result in [Result.L1, Result.L2]:
+
+        points = {}
+        for key in points_dict.keys():
+            points[key] = point(key, points_dict[key])
+
+        lines = {}
+        for key in lines_dict.keys():
+            source = points[lines_dict[key][0]]
+            target = points[lines_dict[key][1]]
+            lines[key] = Line(source, target)
+
+        constraint_list = create_constraints(lines, points, constraint_dict)
+        if not json_data:
+            json_data = export_entities_to_dict(lines=lines, points=points)
+            ax = fig.add_subplot(subplot_int)
+            subplot_int += 1
+            ax.set_title("Original")
+            add_lines_to_plot(ax, lines)
+
+        s = Sketch()
+        for line in lines.values():
+            s.add_entity(line)
+
+        for constraint in constraint_list:
+            s.add_constraint(constraint)
+
+        # And solve!
+        if result == Result.L1:
+            s.use_linear_program(True)
+        else:
+            s.use_linear_program(False)
+        s.update()
+
+        ax2 = fig.add_subplot(subplot_int)
+        subplot_int += 1
+        ax2.set_title(f"{result.name}")
+        add_lines_to_plot(ax2, lines)
+
+        json_data = export_entities_to_dict(lines=lines,
+                                            data=json_data,
+                                            result=result)
+
+    json_data = add_comparison_data(json_data)
+
+    write_data_to_json_file(path=json_path, data=json_data)
+    plt.legend()
+    plt.show()
