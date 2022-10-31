@@ -14,25 +14,25 @@ lines = {}
 lines["l1"] = ["p1", "p2"]
 lines["l2"] = ["p3", "p4"]
 
-constraints_dict = {}
-constraints_dict["c1"] = {
+constraint_dict = {}
+constraint_dict["c1"] = {
     "type": PyConstraints.LENGTH,
     "entities": ["l1"],
     "value": 6
 }
 
-constraints_dict["c2"] = {
+constraint_dict["c2"] = {
     "type": PyConstraints.LENGTH,
     "entities": ["l2"],
     "value": 6
 }
 
-constraints_dict["c3"] = {
+constraint_dict["c3"] = {
     "type": PyConstraints.ORTHOGONAL,
     "entities": ["l1", "l2"],
 }
 
 create_and_solve_sketch(lines_dict=lines,
                         points_dict=points,
-                        constraint_dict=constraints_dict,
+                        constraint_dict=constraint_dict,
                         json_path=Path("/tmp/"))
