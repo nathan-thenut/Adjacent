@@ -13,9 +13,9 @@ class Result(Enum):
     L2 = 3
 
 
-class PyConstraints(Enum):
-    LENGTH = 1
-    ORTHOGONAL = 2
+class PyConstraints(str, Enum):
+    LENGTH = "LENGTH"
+    ORTHOGONAL = "ORTHOGONAL"
 
 
 # helper function
@@ -174,6 +174,42 @@ def write_data_to_json_file(path: Path,
         file.write(json_string)
 
 
+def read_sketch_from_json_data(
+    file_path: Path
+) -> tuple[dict[str, tuple[int]], dict[str, list[str]], dict[str, dict]]:
+    """Reads json data into sketch data for the solver."""
+    with open(file_path, "r", encoding="utf8") as file:
+        json_data = json.load(file)
+        points = {}
+        if "points" in json_data.keys():
+            points_data = json_data["points"]
+            for key in points_data.keys():
+                x = points_data[key][Result.ORIGINAL.name]["x"]
+                y = points_data[key][Result.ORIGINAL.name]["y"]
+                points[key] = (x, y)
+
+        lines = {}
+        if "lines" in json_data.keys():
+            lines_data = json_data["lines"]
+            for key in lines_data.keys():
+                pnt_values = []
+                pnts = []
+                for pnt in lines_data[key]["points"].values():
+                    x = pnt[Result.ORIGINAL.name]["x"]
+                    y = pnt[Result.ORIGINAL.name]["y"]
+                    pnt_values.append((x, y))
+                for pnt in points.keys():
+                    if points[pnt] in pnt_values:
+                        pnts.append(pnt)
+                lines[key] = pnts
+
+        constraint_dict = {}
+        if "constraints" in json_data.keys():
+            constraint_dict = json_data["constraints"]
+
+        return (points, lines, constraint_dict)
+
+
 def create_constraints(
     lines: dict[str, Line],
     points: dict[str, Point],
@@ -221,6 +257,7 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
         constraint_list = create_constraints(lines, points, constraint_dict)
         if not json_data:
             json_data = export_entities_to_dict(lines=lines, points=points)
+            json_data["constraints"] = constraint_dict
             ax = fig.add_subplot(subplot_int)
             subplot_int += 1
             ax.set_title("Original")

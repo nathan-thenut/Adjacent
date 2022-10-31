@@ -230,8 +230,11 @@ namespace operations_research
         std::size_t num_vars = X.shape(0);
         std::size_t num_constraints = B.shape(0);
 
-        std::cout << "Number of variables: " << num_vars << "\n";
-        std::cout << "Number of constraints: " << num_constraints << "\n";
+        if (DEBUG)
+        {
+            std::cout << "Number of variables: " << num_vars << "\n";
+            std::cout << "Number of constraints: " << num_constraints << "\n";
+        }
 
         const double infinity = MPSolver::infinity();
         MPModelProto model_proto;
@@ -314,19 +317,26 @@ namespace operations_research
                 // x = u - v
                 double u = solution_response.variable_value(i);
                 double v = solution_response.variable_value(i + num_vars);
-                std::cout << model_proto.variable(i).name() << " = " << u << std::endl;
-                std::cout << model_proto.variable(i + num_vars).name() << " = " << v << std::endl;
+                if (DEBUG)
+                {
+                    std::cout << model_proto.variable(i).name() << " = " << u << std::endl;
+                    std::cout << model_proto.variable(i + num_vars).name() << " = " << v
+                              << std::endl;
+                }
                 X(i) = u - v;
             }
 
-            // print x for debugging output
-            std::string x_values = "X(";
-            for (int i = 0; i < num_vars; i++)
+            if (DEBUG)
             {
-                x_values += std::to_string(X(i)) + ", ";
+                // print x for debugging output
+                std::string x_values = "X(";
+                for (int i = 0; i < num_vars; i++)
+                {
+                    x_values += std::to_string(X(i)) + ", ";
+                }
+                x_values += ")";
+                std::cout << x_values << std::endl;
             }
-            x_values += ")";
-            std::cout << x_values << std::endl;
         }
         else
         {
