@@ -2,10 +2,10 @@ import numpy as np
 from pathlib import Path
 from utils import (PyConstraints, create_and_solve_sketch)
 
-POINT_COUNT = 20
+POINT_COUNT = 30
 
-x_values = np.random.randint(low=-10, high=10, size=POINT_COUNT)
-y_values = np.random.randint(low=-10, high=10, size=POINT_COUNT)
+x_values = np.random.randint(low=-20, high=20, size=POINT_COUNT)
+y_values = np.random.randint(low=-20, high=20, size=POINT_COUNT)
 
 points = {}
 for i in range(POINT_COUNT):
