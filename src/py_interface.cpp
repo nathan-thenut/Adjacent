@@ -103,6 +103,11 @@ PYBIND11_MODULE(adjacent_api, m)
         sub, "Orthogonal")
         .def(py::init<std::shared_ptr<LineE>&, std::shared_ptr<LineE>&>());
 
+    py::class_<EqualConstraint, ValueConstraint, Constraint, std::shared_ptr<EqualConstraint>>(
+        sub, "Equal")
+        .def(py::init<std::shared_ptr<LineE>&, std::shared_ptr<LineE>&>());
+
+
     py::class_<TangentConstraint, Constraint, std::shared_ptr<TangentConstraint>>(sub, "Tangent")
         .def(py::init<std::shared_ptr<CircleE>&, std::shared_ptr<LineE>&>());
 

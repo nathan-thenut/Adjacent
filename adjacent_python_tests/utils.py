@@ -18,6 +18,8 @@ class PyConstraints(str, Enum):
     ORTHOGONAL = "ORTHOGONAL"
     COINCIDENT = "COINCIDENT"
     POINTON = "POINTON"
+    EQUAL = "EQUAL"
+    ANGLE = "ANGLE"
 
 
 # helper function
@@ -233,9 +235,14 @@ def create_constraints(
             constraint_list.append(constraints.Coincident(*entities))
         elif constraint_dict[key]["type"] == PyConstraints.POINTON:
             constraint_list.append(constraints.PointOn(*entities))
+        elif constraint_dict[key]["type"] == PyConstraints.EQUAL:
+            constraint_list.append(constraints.Equal(*entities))
         elif constraint_dict[key]["type"] == PyConstraints.LENGTH:
             value = constraint_dict[key]["value"]
             constraint_list.append(constraints.Length(*entities, value))
+        elif constraint_dict[key]["type"] == PyConstraints.ANGLE:
+            value = constraint_dict[key]["value"]
+            constraint_list.append(constraints.Angle(*entities, value))
 
     return constraint_list
 
