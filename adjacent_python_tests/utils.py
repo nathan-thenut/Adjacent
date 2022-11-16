@@ -168,14 +168,18 @@ def count_non_zeroes_in_result(
     return non_zero_results
 
 
-def write_data_to_json_file(path: Path,
-                            data: dict[str, dict],
-                            timestamp: datetime = datetime.now()):
+def write_data_to_json_file(
+        path: Path,
+        data: dict[str, dict],
+        timestamp: datetime = datetime.now(),
+) -> Path:
     """Writes data to a json file."""
     filepath = path / (timestamp.strftime("%Y-%m-%dT%H%M") + ".json")
     with open(filepath, "w", encoding="utf8") as file:
         json_string = json.dumps(data, indent=2)
         file.write(json_string)
+
+    return filepath
 
 
 def read_sketch_from_json_data(
@@ -301,6 +305,8 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
 
     json_data = add_comparison_data(json_data)
 
-    write_data_to_json_file(path=json_path, data=json_data)
+    file_path = write_data_to_json_file(path=json_path, data=json_data)
     plt.legend()
     plt.show()
+
+    return file_path

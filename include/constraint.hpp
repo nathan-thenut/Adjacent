@@ -514,11 +514,11 @@ public:
         else
         {
             // value->set_value(value->value());
-            pts = get_points(false);
+            pts = get_points(true);
         }
 
         auto d0 = pts[0] - pts[1];
-        auto d1 = pts[3] - pts[2];
+        auto d1 = pts[2] - pts[3];
         // bool angle360 = is_arc?
         bool angle360 = false;
         // Exp angle = sketch.is3d
@@ -530,14 +530,14 @@ public:
     {
         std::array<ExpVector, 4> res;
 
-        if (false)  // points
+        if (!swap)  // points
         {
             for (int i = 0; i < 4; ++i)
             {
                 res[i] = dynamic_cast<PointE*>(entities[i])->expr();
             }
         }
-        else if (true)  // line
+        else if (swap)  // line
         {
             LineE* l0 = dynamic_cast<LineE*>(entities[0]);
             res[0] = *l0->point_on(zero);
@@ -550,9 +550,6 @@ public:
                 // Swap direction of l1
                 std::swap(res[2], res[3]);
             }
-        }
-        else if (false)  // Arc
-        {
         }
 
         return res;

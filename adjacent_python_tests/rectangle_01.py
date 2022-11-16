@@ -18,29 +18,31 @@ lines["l2"] = ["p2", "p3"]
 lines["l3"] = ["p3", "p4"]
 lines["l4"] = ["p4", "p1"]
 
+A = 4
+
 constraint_dict = {}
 # constraint_dict["c0"] = {
 #     "type": PyConstraints.LENGTH,
 #     "entities": ["l1"],
-#     "value": 4
+#     "value": A
 # }
 #
 # constraint_dict["c1"] = {
 #     "type": PyConstraints.LENGTH,
 #     "entities": ["l2"],
-#     "value": 4
+#     "value": A
 # }
 #
 # constraint_dict["c2"] = {
 #     "type": PyConstraints.LENGTH,
 #     "entities": ["l3"],
-#     "value": 4
+#     "value": A
 # }
 #
 # constraint_dict["c3"] = {
 #     "type": PyConstraints.LENGTH,
 #     "entities": ["l4"],
-#     "value": 4
+#     "value": A
 # }
 
 constraint_dict["c3"] = {
@@ -68,10 +70,10 @@ constraint_dict["c6"] = {
     "entities": ["l4", "l1"],
 }
 
-# constraint_dict["c7"] = {
-#     "type": PyConstraints.POINTON,
-#     "entities": ["p3", "p5"],
-# }
+constraint_dict["c7"] = {
+    "type": PyConstraints.POINTON,
+    "entities": ["p3", "p5"],
+}
 
 create_and_solve_sketch(lines_dict=lines,
                         points_dict=points,

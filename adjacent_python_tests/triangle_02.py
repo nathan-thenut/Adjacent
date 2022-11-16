@@ -11,32 +11,37 @@ points["p2"] = (4, 1)
 points["p3"] = (4, 3)
 points["p4"] = (0, 3)
 
+# points["p5"] = (7, 5)
+
 lines = {}
 lines["l1"] = ["p1", "p2"]
 lines["l2"] = ["p2", "p3"]
 lines["l3"] = ["p3", "p1"]
 lines["l4"] = ["p2", "p4"]
 
-ANGLE = 0.33333 * np.pi
+ANGLE = np.deg2rad(45)
+A = 4
+B = 2
+C = np.sqrt(np.sum(np.square([A, B])))
 
 constraint_dict = {}
-# constraint_dict["c1"] = {
-#     "type": PyConstraints.LENGTH,
-#     "entities": ["l1"],
-#     "value": 6
-# }
+constraint_dict["c1"] = {
+    "type": PyConstraints.LENGTH,
+    "entities": ["l1"],
+    "value": A
+}
 
-# constraint_dict["c2"] = {
-#     "type": PyConstraints.LENGTH,
-#     "entities": ["l2"],
-#     "value": 6
-# }
+constraint_dict["c2"] = {
+    "type": PyConstraints.LENGTH,
+    "entities": ["l2"],
+    "value": B
+}
 
-# constraint_dict["c3"] = {
-#     "type": PyConstraints.LENGTH,
-#     "entities": ["l3"],
-#     "value": 9
-# }
+constraint_dict["c3"] = {
+    "type": PyConstraints.LENGTH,
+    "entities": ["l3"],
+    "value": C
+}
 
 constraint_dict["c4"] = {
     "type": PyConstraints.ORTHOGONAL,
@@ -45,13 +50,13 @@ constraint_dict["c4"] = {
 
 constraint_dict["c5"] = {
     "type": PyConstraints.ANGLE,
-    "entities": ["l1", "l4"],
-    "value": -ANGLE
+    "entities": ["l4", "l1"],
+    "value": ANGLE
 }
 
 # constraint_dict["c6"] = {
 #     "type": PyConstraints.POINTON,
-#     "entities": ["p3", "p4"],
+#     "entities": ["p3", "p5"],
 # }
 
 create_and_solve_sketch(lines_dict=lines,
