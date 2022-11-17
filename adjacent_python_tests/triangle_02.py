@@ -50,7 +50,7 @@ constraint_dict["c4"] = {
 
 constraint_dict["c5"] = {
     "type": PyConstraints.ANGLE,
-    "entities": ["l4", "l1"],
+    "entities": ["l2", "l4"],
     "value": ANGLE
 }
 

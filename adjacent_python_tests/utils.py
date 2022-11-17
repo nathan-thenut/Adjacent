@@ -304,9 +304,48 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
                                             result=result)
 
     json_data = add_comparison_data(json_data)
-
+    check_angle_constraints(json_data)
     file_path = write_data_to_json_file(path=json_path, data=json_data)
     plt.legend()
     plt.show()
 
     return file_path
+
+
+def get_angle_between_vectors(vector1, vector2) -> float:
+    """Calculate angle between two vectors."""
+    v1_angle_to_x = np.rad2deg(np.arctan2(vector1[0], vector1[1]))
+    v2_angle_to_x = np.rad2deg(np.arctan2(vector2[0], vector2[1]))
+
+    return max(v1_angle_to_x, v2_angle_to_x) - min(v1_angle_to_x,
+                                                   v2_angle_to_x)
+
+
+def check_angle_constraints(data: dict[str, dict]):
+    """Calculate the angles and check if constraints have been met."""
+    for constraint in data["constraints"].keys():
+        c = data["constraints"][constraint]
+        if c["type"] == PyConstraints.ANGLE:
+            c["value_in_deg"] = np.rad2deg(c["value"])
+            lines = {}
+            for line in c["entities"]:
+                line_data = data["lines"][line]["points"]
+                for pnt in line_data.keys():
+                    point_data = line_data[pnt]
+                    for result in point_data.keys():
+                        if result not in lines.keys():
+                            lines[result] = {}
+                        if line not in lines[result].keys():
+                            lines[result][line] = {}
+                        lines[result][line][pnt] = point_data[result]
+
+            for result in lines.keys():
+                vectors = []
+                for line in lines[result].keys():
+                    line_data = lines[result][line]
+                    start_x = lines[result][line]["source"]["x"]
+                    start_y = lines[result][line]["source"]["y"]
+                    end_x = lines[result][line]["target"]["x"]
+                    end_y = lines[result][line]["target"]["y"]
+                    vectors.append((start_x - end_x, start_y - end_y))
+                c[result] = get_angle_between_vectors(*vectors)
