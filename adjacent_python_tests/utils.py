@@ -109,18 +109,17 @@ def add_comparison_data(data: dict[str, dict]) -> dict[str, dict]:
         sum_of_changes[result] = 0
         non_zero_results[result] = 0
 
-    if "lines" in new_data.keys():
-        for line in new_data["lines"].keys():
-            points = new_data["lines"][line]["points"]
-            for pnt in points.keys():
-                variables += 2
-                add_comparison_data_to_point(points[pnt])
-                for result in [Result.L1.name, Result.L2.name]:
-                    if result in points[pnt].keys():
-                        sum_of_changes[result] += points[pnt][result][
-                            "sum_of_changes"]
-                        non_zero_results[result] += points[pnt][result][
-                            "non_zero_results"]
+    if "points" in new_data.keys():
+        for pnt in new_data["points"].keys():
+            variables += 2
+            points = new_data["points"]
+            add_comparison_data_to_point(points[pnt])
+            for result in [Result.L1.name, Result.L2.name]:
+                if result in points[pnt].keys():
+                    sum_of_changes[result] += points[pnt][result][
+                        "sum_of_changes"]
+                    non_zero_results[result] += points[pnt][result][
+                        "non_zero_results"]
 
     results = {}
     results["sum_of_changes"] = sum_of_changes
@@ -198,19 +197,7 @@ def read_sketch_from_json_data(
 
         lines = {}
         if "lines" in json_data.keys():
-            lines_data = json_data["lines"]
-            for key in lines_data.keys():
-                pnt_values = []
-                pnts = []
-                for pnt in lines_data[key]["points"].values():
-                    x = pnt[Result.ORIGINAL.name]["x"]
-                    y = pnt[Result.ORIGINAL.name]["y"]
-                    pnt_values.append((x, y))
-                for pnt in points.keys():
-                    if points[pnt] in pnt_values:
-                        pnts.append(pnt)
-                lines[key] = pnts
-
+            lines = json_data["lines"]
         constraint_dict = {}
         if "constraints" in json_data.keys():
             constraint_dict = json_data["constraints"]
@@ -273,7 +260,8 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
 
         constraint_list = create_constraints(lines, points, constraint_dict)
         if not json_data:
-            json_data = export_entities_to_dict(lines=lines, points=points)
+            json_data = export_entities_to_dict(points=points)
+            json_data["lines"] = lines_dict
             json_data["constraints"] = constraint_dict
             ax = fig.add_subplot(subplot_int)
             subplot_int += 1
@@ -299,7 +287,7 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
         ax2.set_title(f"{result.name}")
         add_lines_to_plot(ax2, lines)
 
-        json_data = export_entities_to_dict(lines=lines,
+        json_data = export_entities_to_dict(points=points,
                                             data=json_data,
                                             result=result)
 
@@ -329,9 +317,9 @@ def check_angle_constraints(data: dict[str, dict]):
             c["value_in_deg"] = np.rad2deg(c["value"])
             lines = {}
             for line in c["entities"]:
-                line_data = data["lines"][line]["points"]
-                for pnt in line_data.keys():
-                    point_data = line_data[pnt]
+                line_data = data["lines"][line]
+                for pnt in line_data:
+                    point_data = data["points"][pnt]
                     for result in point_data.keys():
                         if result not in lines.keys():
                             lines[result] = {}
@@ -343,9 +331,10 @@ def check_angle_constraints(data: dict[str, dict]):
                 vectors = []
                 for line in lines[result].keys():
                     line_data = lines[result][line]
-                    start_x = lines[result][line]["source"]["x"]
-                    start_y = lines[result][line]["source"]["y"]
-                    end_x = lines[result][line]["target"]["x"]
-                    end_y = lines[result][line]["target"]["y"]
+                    pnts = list(line_data.keys())
+                    start_x = line_data[pnts[0]]["x"]
+                    start_y = line_data[pnts[0]]["y"]
+                    end_x = line_data[pnts[1]]["x"]
+                    end_y = line_data[pnts[1]]["y"]
                     vectors.append((start_x - end_x, start_y - end_y))
                 c[result] = get_angle_between_vectors(*vectors)
