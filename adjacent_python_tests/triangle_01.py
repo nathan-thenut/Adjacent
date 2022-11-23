@@ -8,7 +8,8 @@ points = {}
 points["p1"] = (0, 1)
 points["p2"] = (4, 1)
 points["p3"] = (4, 3)
-points["p4"] = (2.5, 3)
+
+points["p4"] = (5, 2)
 
 lines = {}
 lines["l1"] = ["p1", "p2"]

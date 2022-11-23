@@ -11,7 +11,7 @@ points["p2"] = (4, 1)
 points["p3"] = (4, 3)
 points["p4"] = (0, 3)
 
-# points["p5"] = (7, 5)
+points["p5"] = (4, 4)
 
 lines = {}
 lines["l1"] = ["p1", "p2"]
@@ -54,10 +54,10 @@ constraint_dict["c5"] = {
     "value": ANGLE
 }
 
-# constraint_dict["c6"] = {
-#     "type": PyConstraints.POINTON,
-#     "entities": ["p3", "p5"],
-# }
+constraint_dict["c6"] = {
+    "type": PyConstraints.POINTON,
+    "entities": ["p3", "p5"],
+}
 
 create_and_solve_sketch(lines_dict=lines,
                         points_dict=points,

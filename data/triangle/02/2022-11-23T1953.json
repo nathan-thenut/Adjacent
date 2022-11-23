@@ -1,0 +1,172 @@
+{
+  "points": {
+    "p1": {
+      "ORIGINAL": {
+        "x": 0.0,
+        "y": 1.0
+      },
+      "L1": {
+        "x": 4.1722594019239745,
+        "y": 1.5353379515451984,
+        "sum_of_changes": 4.707597353469173,
+        "non_zero_results": 2
+      },
+      "L2": {
+        "x": 3.8836688062261455,
+        "y": 1.7924339615976612,
+        "sum_of_changes": 4.6761027678238065,
+        "non_zero_results": 2
+      }
+    },
+    "p2": {
+      "ORIGINAL": {
+        "x": 4.0,
+        "y": 1.0
+      },
+      "L1": {
+        "x": 7.820316699766716,
+        "y": 3.1759713510786294,
+        "sum_of_changes": 5.9962880508453456,
+        "non_zero_results": 2
+      },
+      "L2": {
+        "x": 7.659760176606165,
+        "y": 3.1119543148099904,
+        "sum_of_changes": 5.771714491416155,
+        "non_zero_results": 2
+      }
+    },
+    "p3": {
+      "ORIGINAL": {
+        "x": 4.0,
+        "y": 3.0
+      },
+      "L1": {
+        "x": 7.0,
+        "y": 5.0,
+        "sum_of_changes": 5.0,
+        "non_zero_results": 2
+      },
+      "L2": {
+        "x": 7.0,
+        "y": 5.0,
+        "sum_of_changes": 5.0,
+        "non_zero_results": 2
+      }
+    },
+    "p4": {
+      "ORIGINAL": {
+        "x": 0.0,
+        "y": 3.0
+      },
+      "L1": {
+        "x": 0.0,
+        "y": 6.144322410627871,
+        "sum_of_changes": 3.144322410627871,
+        "non_zero_results": 1
+      },
+      "L2": {
+        "x": 1.5323878010540293,
+        "y": 6.065932405307783,
+        "sum_of_changes": 4.598320206361812,
+        "non_zero_results": 2
+      }
+    },
+    "p5": {
+      "ORIGINAL": {
+        "x": 7.0,
+        "y": 5.0
+      },
+      "L1": {
+        "x": 7.0,
+        "y": 5.0,
+        "sum_of_changes": 0.0,
+        "non_zero_results": 0
+      },
+      "L2": {
+        "x": 7.0,
+        "y": 5.0,
+        "sum_of_changes": 0.0,
+        "non_zero_results": 0
+      }
+    }
+  },
+  "lines": {
+    "l1": [
+      "p1",
+      "p2"
+    ],
+    "l2": [
+      "p2",
+      "p3"
+    ],
+    "l3": [
+      "p3",
+      "p1"
+    ],
+    "l4": [
+      "p2",
+      "p4"
+    ]
+  },
+  "constraints": {
+    "c1": {
+      "type": "LENGTH",
+      "entities": [
+        "l1"
+      ],
+      "value": 4
+    },
+    "c2": {
+      "type": "LENGTH",
+      "entities": [
+        "l2"
+      ],
+      "value": 2
+    },
+    "c3": {
+      "type": "LENGTH",
+      "entities": [
+        "l3"
+      ],
+      "value": 4.47213595499958
+    },
+    "c4": {
+      "type": "ORTHOGONAL",
+      "entities": [
+        "l1",
+        "l2"
+      ]
+    },
+    "c5": {
+      "type": "ANGLE",
+      "entities": [
+        "l2",
+        "l4"
+      ],
+      "value": 0.7853981633974483,
+      "value_in_deg": 45.0,
+      "ORIGINAL": 63.43494882292201,
+      "L1": 45.000000000332165,
+      "L2": 44.99999999999976
+    },
+    "c6": {
+      "type": "POINTON",
+      "entities": [
+        "p3",
+        "p5"
+      ]
+    }
+  },
+  "Results": {
+    "sum_of_changes": {
+      "L1": 18.84820781494239,
+      "L2": 20.046137465601774
+    },
+    "non_zero_results": {
+      "L1": 7,
+      "L2": 8
+    },
+    "variables": 10
+  }
+}

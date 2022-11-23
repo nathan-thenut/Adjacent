@@ -1,0 +1,120 @@
+{
+  "points": {
+    "p1": {
+      "ORIGINAL": {
+        "x": 0.0,
+        "y": 1.0
+      },
+      "L1": {
+        "x": 0.0,
+        "y": 1.0,
+        "sum_of_changes": 0.0,
+        "non_zero_results": 0
+      },
+      "L2": {
+        "x": -0.007800255530216705,
+        "y": 1.1166431553270184,
+        "sum_of_changes": 0.12444341085723512,
+        "non_zero_results": 2
+      }
+    },
+    "p2": {
+      "ORIGINAL": {
+        "x": 4.0,
+        "y": 1.0
+      },
+      "L1": {
+        "x": 5.0,
+        "y": 1.0,
+        "sum_of_changes": 1.0,
+        "non_zero_results": 1
+      },
+      "L2": {
+        "x": 4.566108759766012,
+        "y": 0.8985912997574272,
+        "sum_of_changes": 0.6675174600085845,
+        "non_zero_results": 2
+      }
+    },
+    "p3": {
+      "ORIGINAL": {
+        "x": 4.0,
+        "y": 3.0
+      },
+      "L1": {
+        "x": 5.0,
+        "y": 10.0,
+        "sum_of_changes": 8.0,
+        "non_zero_results": 2
+      },
+      "L2": {
+        "x": 5.0,
+        "y": 10.0,
+        "sum_of_changes": 8.0,
+        "non_zero_results": 2
+      }
+    },
+    "p4": {
+      "ORIGINAL": {
+        "x": 5.0,
+        "y": 10.0
+      },
+      "L1": {
+        "x": 5.0,
+        "y": 10.0,
+        "sum_of_changes": 0.0,
+        "non_zero_results": 0
+      },
+      "L2": {
+        "x": 5.0,
+        "y": 10.0,
+        "sum_of_changes": 0.0,
+        "non_zero_results": 0
+      }
+    }
+  },
+  "lines": {
+    "l1": [
+      "p1",
+      "p2"
+    ],
+    "l2": [
+      "p2",
+      "p3"
+    ],
+    "l3": [
+      "p3",
+      "p1"
+    ]
+  },
+  "constraints": {
+    "c4": {
+      "type": "ORTHOGONAL",
+      "entities": [
+        "l1",
+        "l2"
+      ],
+      "ORIGINAL": 270.0,
+      "L1": 270.0,
+      "L2": 90.00000000002859
+    },
+    "c5": {
+      "type": "POINTON",
+      "entities": [
+        "p3",
+        "p4"
+      ]
+    }
+  },
+  "Results": {
+    "sum_of_changes": {
+      "L1": 9.0,
+      "L2": 8.79196087086582
+    },
+    "non_zero_results": {
+      "L1": 3,
+      "L2": 6
+    },
+    "variables": 8
+  }
+}

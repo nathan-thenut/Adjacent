@@ -313,8 +313,9 @@ def check_angle_constraints(data: dict[str, dict]):
     """Calculate the angles and check if constraints have been met."""
     for constraint in data["constraints"].keys():
         c = data["constraints"][constraint]
-        if c["type"] == PyConstraints.ANGLE:
-            c["value_in_deg"] = np.rad2deg(c["value"])
+        if c["type"] in [PyConstraints.ANGLE, PyConstraints.ORTHOGONAL]:
+            if c["type"] == PyConstraints.ANGLE:
+                c["value_in_deg"] = np.rad2deg(c["value"])
             lines = {}
             for line in c["entities"]:
                 line_data = data["lines"][line]

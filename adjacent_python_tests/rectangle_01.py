@@ -10,7 +10,7 @@ points["p2"] = (4, 1)
 points["p3"] = (4, 5)
 points["p4"] = (0, 5)
 
-points["p5"] = (4, 8)
+points["p5"] = (8, 5)
 
 lines = {}
 lines["l1"] = ["p1", "p2"]
@@ -21,11 +21,11 @@ lines["l4"] = ["p4", "p1"]
 A = 4
 
 constraint_dict = {}
-# constraint_dict["c0"] = {
-#     "type": PyConstraints.LENGTH,
-#     "entities": ["l1"],
-#     "value": A
-# }
+constraint_dict["c0"] = {
+    "type": PyConstraints.LENGTH,
+    "entities": ["l1"],
+    "value": A
+}
 #
 # constraint_dict["c1"] = {
 #     "type": PyConstraints.LENGTH,
