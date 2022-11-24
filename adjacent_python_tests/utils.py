@@ -31,10 +31,15 @@ def point(name, xyz=(0, 0, 0)):
                  Param(f"{name}_z", xyz[2]))
 
 
+def circle(name, center, radius):
+    """Creates a circle using Adjacent's circle entity."""
+    return Circle(center, Param(f"{name}_rad", radius))
+
+
 def add_lines_to_plot(figure_or_ax,
                       lines: dict[str, Line],
                       three_d: bool = False):
-    """Adds Lines from Adjacent to a matplotlib plot."""
+    """Add Lines from Adjacent to a matplotlib plot."""
     for key in lines.keys():
         source_coords = lines[key].source().eval()
         target_coords = lines[key].target().eval()
@@ -48,6 +53,19 @@ def add_lines_to_plot(figure_or_ax,
         else:
             figure_or_ax.scatter(l_x, l_y)
             figure_or_ax.plot(l_x, l_y, label=key)
+
+
+def add_circles_to_plot(figure_or_ax, circles: dict[str, Circle]):
+    """Add Circles from Adjacent to a matplotlib plot."""
+    for key in circles.keys():
+        center_coords = circles[key].center().eval()
+        radius = circles[key].radius().eval()
+        circle_plot = plt.Circle(center_coords,
+                                 radius=radius,
+                                 fill=False,
+                                 label=key)
+        figure_or_ax.set_aspect(1)
+        figure_or_ax.add_artist(circle_plot)
 
 
 def export_entities_to_dict(
@@ -239,6 +257,7 @@ def create_constraints(
 
 
 def create_and_solve_sketch(lines_dict: dict[str, list[str]],
+                            circle_dict: dict[str, tuple[str, int]],
                             points_dict: dict[str, tuple[int]],
                             constraint_dict: dict[str, dict], json_path: Path):
     """Creates an adjacent sketch and solves it."""
@@ -258,19 +277,30 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
             target = points[lines_dict[key][1]]
             lines[key] = Line(source, target)
 
+        circles = {}
+        for key in circle_dict.keys():
+            center = points[circle_dict[key][0]]
+            radius = circle_dict[key][1]
+            circles[key] = circle(name=key, center=center, radius=radius)
+
         constraint_list = create_constraints(lines, points, constraint_dict)
         if not json_data:
             json_data = export_entities_to_dict(points=points)
             json_data["lines"] = lines_dict
+            json_data["circles"] = circle_dict
             json_data["constraints"] = constraint_dict
             ax = fig.add_subplot(subplot_int)
             subplot_int += 1
             ax.set_title("Original")
             add_lines_to_plot(ax, lines)
+            add_circles_to_plot(ax, circles)
 
         s = Sketch()
         for line in lines.values():
             s.add_entity(line)
+
+        for circle in circles.values():
+            s.add_entity(circle)
 
         for constraint in constraint_list:
             s.add_constraint(constraint)
@@ -286,6 +316,7 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
         subplot_int += 1
         ax2.set_title(f"{result.name}")
         add_lines_to_plot(ax2, lines)
+        add_circles_to_plot(ax2, circles)
 
         json_data = export_entities_to_dict(points=points,
                                             data=json_data,
