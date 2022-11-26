@@ -63,9 +63,12 @@ def add_circles_to_plot(figure_or_ax, circles: dict[str, Circle]):
         circle_plot = plt.Circle(center_coords,
                                  radius=radius,
                                  fill=False,
+                                 in_layout=True,
                                  label=key)
-        figure_or_ax.set_aspect(1)
-        figure_or_ax.add_artist(circle_plot)
+        figure_or_ax.add_patch(circle_plot)
+        figure_or_ax.scatter(center_coords[0], center_coords[1])
+        figure_or_ax.set_aspect("equal", adjustable="datalim")
+        figure_or_ax.autoscale()
 
 
 def export_entities_to_dict(
@@ -299,8 +302,8 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
         for line in lines.values():
             s.add_entity(line)
 
-        for circle in circles.values():
-            s.add_entity(circle)
+        for cc in circles.values():
+            s.add_entity(cc)
 
         for constraint in constraint_list:
             s.add_constraint(constraint)
