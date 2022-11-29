@@ -71,6 +71,14 @@ PYBIND11_MODULE(adjacent_api, m)
         sub, "Coincident")
         .def(py::init<std::shared_ptr<PointE>&, std::shared_ptr<PointE>&>());
 
+    py::class_<PointCenterTriangleConstraint,
+               Constraint,
+               std::shared_ptr<PointCenterTriangleConstraint>>(sub, "CenterTriangle")
+        .def(py::init<std::shared_ptr<PointE>&,
+                      std::shared_ptr<PointE>&,
+                      std::shared_ptr<PointE>&,
+                      std::shared_ptr<PointE>&>());
+
     py::class_<PointsDistanceConstraint,
                ValueConstraint,
                Constraint,

@@ -184,7 +184,8 @@ public:
 static std::shared_ptr<Expr> zero = std::make_shared<Expr>(0.), one = std::make_shared<Expr>(1.),
                              mOne = std::make_shared<Expr>(-1.), two = std::make_shared<Expr>(2.0),
                              PI_E = std::make_shared<Expr>(M_PI),
-                             PI2_E = std::make_shared<Expr>(M_PI * 2);
+                             PI2_E = std::make_shared<Expr>(M_PI * 2),
+                             ONE_THIRD = std::make_shared<Expr>(1 / 3);
 
 std::shared_ptr<Expr> expr(double);
 

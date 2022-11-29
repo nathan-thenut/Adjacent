@@ -12,6 +12,7 @@ enum CONSTRAINT_TYPE
     INVALID,
     PointOn,
     PointsCoincident,
+    PointCenterTriangle,
     Parallel,
     Orthogonal,
     Length,
@@ -369,6 +370,40 @@ public:
         return p0;
     }
 };
+
+
+class PointCenterTriangleConstraint : public Constraint
+{
+public:
+    std::shared_ptr<PointE> p0, p1, p2, p3;
+
+    PointCenterTriangleConstraint(std::shared_ptr<PointE>& p0, std::shared_ptr<PointE>& p1,
+                                  std::shared_ptr<PointE>& p2, std::shared_ptr<PointE>& p3)
+        : Constraint(CONSTRAINT_TYPE::PointCenterTriangle)
+        , p0(p0)
+        , p1(p1)
+        , p2(p2)
+        , p3(p3)
+    {
+        entities.push_back(p0.get());
+        entities.push_back(p1.get());
+        entities.push_back(p2.get());
+        entities.push_back(p3.get());
+    }
+
+    std::vector<ExprPtr> equations()
+    {
+        ExpVector d0 = p1->expr() + p2->expr() + p3->expr();
+        return std::vector<ExprPtr>(
+            { p0->x->expr() - ONE_THIRD * d0.x, p0->y->expr() - ONE_THIRD * d0.y });
+    }
+
+    std::vector<ParamPtr> parameters()
+    {
+        return {};
+    }
+};
+
 
 class PointsDistanceConstraint : public ValueConstraint
 {
