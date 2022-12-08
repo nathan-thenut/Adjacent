@@ -59,7 +59,9 @@ constraint_dict["c6"] = {
     "entities": ["p3", "p5"],
 }
 
-create_and_solve_sketch(lines_dict=lines,
-                        points_dict=points,
-                        constraint_dict=constraint_dict,
-                        json_path=Path("/home/nathan/Downloads/Books"))
+create_and_solve_sketch(
+    lines_dict=lines,
+    points_dict=points,
+    circle_dict={},
+    constraint_dict=constraint_dict,
+    json_path=Path("/home/nathan/Uni-Stuff/CG/Adjacent/data/triangle/02/"))

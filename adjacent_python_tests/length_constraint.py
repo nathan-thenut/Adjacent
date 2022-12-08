@@ -32,7 +32,13 @@ constraint_dict["c3"] = {
     "entities": ["l1", "l2"],
 }
 
+constraint_dict["c4"] = {
+    "type": PyConstraints.MIDPOINT,
+    "entities": ["p3", "p4", "p1"],
+}
+
 create_and_solve_sketch(lines_dict=lines,
                         points_dict=points,
+                        circle_dict={},
                         constraint_dict=constraint_dict,
                         json_path=Path("/tmp/"))

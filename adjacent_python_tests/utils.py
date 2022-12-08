@@ -21,6 +21,7 @@ class PyConstraints(str, Enum):
     EQUAL = "EQUAL"
     ANGLE = "ANGLE"
     CENTER_TRIANGLE = "CENTER_TRIANGLE"
+    MIDPOINT = "MIDPOINT"
 
 
 # helper function
@@ -248,6 +249,8 @@ def create_constraints(
             constraint_list.append(constraints.Coincident(*entities))
         elif constraint_dict[key]["type"] == PyConstraints.CENTER_TRIANGLE:
             constraint_list.append(constraints.CenterTriangle(*entities))
+        elif constraint_dict[key]["type"] == PyConstraints.MIDPOINT:
+            constraint_list.append(constraints.MidPoint(*entities))
         elif constraint_dict[key]["type"] == PyConstraints.POINTON:
             constraint_list.append(constraints.PointOn(*entities))
         elif constraint_dict[key]["type"] == PyConstraints.EQUAL:

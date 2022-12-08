@@ -13,6 +13,7 @@ enum CONSTRAINT_TYPE
     PointOn,
     PointsCoincident,
     PointCenterTriangle,
+    MidPoint,
     Parallel,
     Orthogonal,
     Length,
@@ -372,14 +373,42 @@ public:
 };
 
 
-class PointCenterTriangleConstraint : public Constraint
+class MidPointConstraint : public ValueConstraint
+{
+public:
+    std::shared_ptr<PointE> p0, p1, p2;
+
+    MidPointConstraint(std::shared_ptr<PointE> p0, std::shared_ptr<PointE> p1,
+                       std::shared_ptr<PointE> p2)
+        : ValueConstraint(CONSTRAINT_TYPE::MidPoint, 1)
+        , p0(p0)
+        , p1(p1)
+        , p2(p2)
+    {
+        entities.push_back(p0.get());
+        entities.push_back(p1.get());
+        entities.push_back(p2.get());
+        satisfy();
+        value->set_value(2);
+    }
+
+    std::vector<ExprPtr> equations()
+    {
+        return std::vector<ExprPtr>({
+            p0->x->expr() + p1->x->expr() - value->expr() * p2->x->expr(),
+            p0->y->expr() + p1->y->expr() - value->expr() * p2->y->expr(),
+        });
+    }
+};
+
+class PointCenterTriangleConstraint : public ValueConstraint
 {
 public:
     std::shared_ptr<PointE> p0, p1, p2, p3;
 
     PointCenterTriangleConstraint(std::shared_ptr<PointE>& p0, std::shared_ptr<PointE>& p1,
                                   std::shared_ptr<PointE>& p2, std::shared_ptr<PointE>& p3)
-        : Constraint(CONSTRAINT_TYPE::PointCenterTriangle)
+        : ValueConstraint(CONSTRAINT_TYPE::PointCenterTriangle, 1)
         , p0(p0)
         , p1(p1)
         , p2(p2)
@@ -389,18 +418,16 @@ public:
         entities.push_back(p1.get());
         entities.push_back(p2.get());
         entities.push_back(p3.get());
+        satisfy();
+        value->set_value(3);
     }
 
     std::vector<ExprPtr> equations()
     {
-        ExpVector d0 = p1->expr() + p2->expr() + p3->expr();
-        return std::vector<ExprPtr>(
-            { p0->x->expr() - ONE_THIRD * d0.x, p0->y->expr() - ONE_THIRD * d0.y });
-    }
-
-    std::vector<ParamPtr> parameters()
-    {
-        return {};
+        return std::vector<ExprPtr>({
+            p0->x->expr() + p1->x->expr() + p2->x->expr() - value->expr() * p3->x->expr(),
+            p0->y->expr() + p1->y->expr() + p2->y->expr() - value->expr() * p3->y->expr(),
+        });
     }
 };
 
