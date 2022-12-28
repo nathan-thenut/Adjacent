@@ -61,6 +61,7 @@ constraint_dict["c5"] = {
 }
 
 create_and_solve_sketch(lines_dict=lines,
+                        circle_dict={},
                         points_dict=points,
                         constraint_dict=constraint_dict,
                         json_path=Path("/home/nathan/Downloads/Books"))
