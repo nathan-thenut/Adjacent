@@ -24,6 +24,8 @@ points["p14"] = (-2, 0.0)
 points["p15"] = (-2, 0.5)
 points["p16"] = (-1.5, 1.5)
 
+points["p17"] = (-10, 1)
+
 lines = {}
 lines["l1"] = ["p1", "p2"]
 lines["l2"] = ["p1", "p3"]
@@ -155,6 +157,31 @@ constraint_dict["c19"] = {
 constraint_dict["c20"] = {
     "type": PyConstraints.ORTHOGONAL,
     "entities": ["l1", "l20"],
+}
+
+constraint_dict["c21"] = {
+    "type": PyConstraints.EQUAL,
+    "entities": ["l6", "l7"]
+}
+
+constraint_dict["c22"] = {
+    "type": PyConstraints.EQUAL,
+    "entities": ["l6", "l8"]
+}
+
+constraint_dict["c23"] = {
+    "type": PyConstraints.EQUAL,
+    "entities": ["l6", "l9"]
+}
+
+constraint_dict["c24"] = {
+    "type": PyConstraints.EQUAL,
+    "entities": ["l6", "l10"]
+}
+
+constraint_dict["c25"] = {
+    "type": PyConstraints.POINTON,
+    "entities": ["p2", "p17"],
 }
 
 create_and_solve_sketch(lines_dict=lines,
