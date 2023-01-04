@@ -312,13 +312,19 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
             s.add_entity(cc)
 
         for constraint in constraint_list:
-            s.add_constraint(constraint)
+            if not isinstance(constraint, constraints.PointOn):
+                s.add_constraint(constraint)
 
         # And solve!
         if result == Result.L1:
             s.use_linear_program(True)
         else:
             s.use_linear_program(False)
+        s.update()
+
+        for constraint in constraint_list:
+            if isinstance(constraint, constraints.PointOn):
+                s.add_constraint(constraint)
         s.update()
 
         ax2 = fig.add_subplot(subplot_int)
@@ -334,7 +340,7 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
     json_data = add_comparison_data(json_data)
     check_angle_constraints(json_data)
     file_path = write_data_to_json_file(path=json_path, data=json_data)
-    plt.legend()
+    # plt.legend()
     plt.show()
 
     return file_path

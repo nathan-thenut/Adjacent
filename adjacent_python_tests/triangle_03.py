@@ -10,13 +10,14 @@ points["p2"] = (4, 1)
 points["p3"] = (4, 3)
 
 points["p4"] = (2, 1.5)
-points["p5"] = (3, 1.5)
 
 lines = {}
 lines["l1"] = ["p1", "p2"]
 lines["l2"] = ["p2", "p3"]
 lines["l3"] = ["p3", "p1"]
-lines["l4"] = ["p4", "p5"]
+lines["l4"] = ["p4", "p1"]
+lines["l5"] = ["p4", "p2"]
+lines["l6"] = ["p4", "p3"]
 
 constraint_dict = {}
 # constraint_dict["c1"] = {

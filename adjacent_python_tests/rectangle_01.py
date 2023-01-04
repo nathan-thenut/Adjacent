@@ -11,6 +11,7 @@ points["p3"] = (4, 5)
 points["p4"] = (0, 5)
 
 points["p5"] = (8, 5)
+points["p6"] = (4, 5)
 
 lines = {}
 lines["l1"] = ["p1", "p2"]
@@ -75,7 +76,13 @@ constraint_dict["c7"] = {
     "entities": ["p3", "p5"],
 }
 
+constraint_dict["c8"] = {
+    "type": PyConstraints.POINTON,
+    "entities": ["p4", "p6"],
+}
+
 create_and_solve_sketch(lines_dict=lines,
+                        circle_dict={},
                         points_dict=points,
                         constraint_dict=constraint_dict,
                         json_path=Path("/home/nathan/Downloads/Books"))

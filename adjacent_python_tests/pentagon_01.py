@@ -13,7 +13,7 @@ points["p4"] = (3, -1)
 points["p5"] = (-3, -1)
 points["p6"] = (-3, 1)
 
-points["p7"] = (5, 5)
+points["p7"] = (2, -2)
 
 lines = {}
 lines["l1"] = ["p1", "p2"]
@@ -73,10 +73,10 @@ constraint_dict["c9"] = {
     "entities": ["l6", "l10"]
 }
 
-# constraint_dict["c10"] = {
-#     "type": PyConstraints.POINTON,
-#     "entities": ["p1", "p7"],
-# }
+constraint_dict["c10"] = {
+    "type": PyConstraints.POINTON,
+    "entities": ["p1", "p7"],
+}
 
 create_and_solve_sketch(lines_dict=lines,
                         circle_dict={},

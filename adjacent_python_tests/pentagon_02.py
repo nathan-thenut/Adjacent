@@ -24,7 +24,7 @@ points["p14"] = (-2, 0.0)
 points["p15"] = (-2, 0.5)
 points["p16"] = (-1.5, 1.5)
 
-points["p17"] = (-10, 1)
+points["p17"] = (2, 4)
 
 lines = {}
 lines["l1"] = ["p1", "p2"]
@@ -181,7 +181,7 @@ constraint_dict["c24"] = {
 
 constraint_dict["c25"] = {
     "type": PyConstraints.POINTON,
-    "entities": ["p2", "p17"],
+    "entities": ["p1", "p17"],
 }
 
 create_and_solve_sketch(lines_dict=lines,
