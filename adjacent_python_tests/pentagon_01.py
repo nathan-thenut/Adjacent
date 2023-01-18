@@ -6,14 +6,14 @@ from utils import (
 )
 
 points = {}
-points["p1"] = (0, 0)
-points["p2"] = (0, 3)
-points["p3"] = (3, 1)
-points["p4"] = (3, -1)
-points["p5"] = (-3, -1)
-points["p6"] = (-3, 1)
+points["p1"] = (0.618, 0.09)
+points["p2"] = (1.018, 3.173)
+points["p3"] = (2.99, 0.52)
+points["p4"] = (2.032, -2.517)
+points["p5"] = (-1.849, -2.517)
+points["p6"] = (-3, 1.8055)
 
-points["p7"] = (2, -2)
+points["p7"] = (1, -1)
 
 lines = {}
 lines["l1"] = ["p1", "p2"]
@@ -62,17 +62,17 @@ constraint_dict["c5"] = {
     "value": -ANGLE
 }
 
-constraint_dict["c6"] = {"type": PyConstraints.EQUAL, "entities": ["l6", "l7"]}
-
-constraint_dict["c7"] = {"type": PyConstraints.EQUAL, "entities": ["l6", "l8"]}
-
-constraint_dict["c8"] = {"type": PyConstraints.EQUAL, "entities": ["l6", "l9"]}
-
-constraint_dict["c9"] = {
-    "type": PyConstraints.EQUAL,
-    "entities": ["l6", "l10"]
-}
-
+# constraint_dict["c6"] = {"type": PyConstraints.EQUAL, "entities": ["l6", "l7"]}
+#
+# constraint_dict["c7"] = {"type": PyConstraints.EQUAL, "entities": ["l6", "l8"]}
+#
+# constraint_dict["c8"] = {"type": PyConstraints.EQUAL, "entities": ["l6", "l9"]}
+#
+# constraint_dict["c9"] = {
+#     "type": PyConstraints.EQUAL,
+#     "entities": ["l6", "l10"]
+# }
+#
 constraint_dict["c10"] = {
     "type": PyConstraints.POINTON,
     "entities": ["p1", "p7"],
