@@ -6,25 +6,25 @@ from utils import (
 )
 
 points = {}
-points["p1"] = (0, 0)
-points["p2"] = (0, 3)
-points["p3"] = (3, 1)
-points["p4"] = (3, -1)
-points["p5"] = (-3, -1)
-points["p6"] = (-3, 1)
+points["p1"] = (0.039, 0.02701158784136345)
+points["p2"] = (0.0968479252882644, 3.263)
+points["p3"] = (3.1337363070211173, 0.972)
+points["p4"] = (1.893, -2.6230575905296067)
+points["p5"] = (-1.909, -2.5532955256185668)
+points["p6"] = (-3.019, 1.0824264121634164)
 
-points["p7"] = (0.1, 1.5)
-points["p8"] = (0.2, 1.5)
-points["p9"] = (1.5, 0.75)
-points["p10"] = (1.5, 0.0)
-points["p11"] = (1.5, -0.1)
-points["p12"] = (0, -0.5)
-points["p13"] = (-1.5, -0.5)
-points["p14"] = (-2, 0.0)
-points["p15"] = (-2, 0.5)
-points["p16"] = (-1.5, 1.5)
+points["p7"] = (0.06792396264413221, 1.6450057939206817)
+points["p8"] = (1.2430000808939146, 1.6239996261479137)
+points["p9"] = (1.5863681535105587, 0.49950579392068173)
+points["p10"] = (1.9294345225255194, -0.6239999911748865)
+points["p11"] = (0.966, -1.2980230013441214)
+points["p12"] = (0.0033148641860392615, -1.9715217372889065)
+points["p13"] = (-0.935, -1.2631419688886016)
+points["p14"] = (-1.872999944258877, -0.5549999489388252)
+points["p15"] = (-1.490, 0.5547190000023899)
+points["p16"] = (-1.1064610767450938, 1.6659996076695156)
 
-points["p17"] = (2, 4)
+points["p17"] = (0.5, -0.5)
 
 lines = {}
 lines["l1"] = ["p1", "p2"]
@@ -54,35 +54,35 @@ ANGLE = np.deg2rad(72)
 
 constraint_dict = {}
 
-constraint_dict["c1"] = {
-    "type": PyConstraints.ANGLE,
-    "entities": ["l1", "l2"],
-    "value": -ANGLE
-}
-
-constraint_dict["c2"] = {
-    "type": PyConstraints.ANGLE,
-    "entities": ["l2", "l3"],
-    "value": -ANGLE
-}
-
-constraint_dict["c3"] = {
-    "type": PyConstraints.ANGLE,
-    "entities": ["l3", "l4"],
-    "value": -ANGLE
-}
-
-constraint_dict["c4"] = {
-    "type": PyConstraints.ANGLE,
-    "entities": ["l4", "l5"],
-    "value": -ANGLE
-}
-
-constraint_dict["c5"] = {
-    "type": PyConstraints.ANGLE,
-    "entities": ["l5", "l1"],
-    "value": -ANGLE
-}
+# constraint_dict["c1"] = {
+#     "type": PyConstraints.ANGLE,
+#     "entities": ["l1", "l2"],
+#     "value": -ANGLE
+# }
+#
+# constraint_dict["c2"] = {
+#     "type": PyConstraints.ANGLE,
+#     "entities": ["l2", "l3"],
+#     "value": -ANGLE
+# }
+#
+# constraint_dict["c3"] = {
+#     "type": PyConstraints.ANGLE,
+#     "entities": ["l3", "l4"],
+#     "value": -ANGLE
+# }
+#
+# constraint_dict["c4"] = {
+#     "type": PyConstraints.ANGLE,
+#     "entities": ["l4", "l5"],
+#     "value": -ANGLE
+# }
+#
+# constraint_dict["c5"] = {
+#     "type": PyConstraints.ANGLE,
+#     "entities": ["l5", "l1"],
+#     "value": -ANGLE
+# }
 
 constraint_dict["c6"] = {
     "type": PyConstraints.MIDPOINT,
@@ -159,25 +159,25 @@ constraint_dict["c20"] = {
     "entities": ["l1", "l20"],
 }
 
-constraint_dict["c21"] = {
-    "type": PyConstraints.EQUAL,
-    "entities": ["l6", "l7"]
-}
-
-constraint_dict["c22"] = {
-    "type": PyConstraints.EQUAL,
-    "entities": ["l6", "l8"]
-}
-
-constraint_dict["c23"] = {
-    "type": PyConstraints.EQUAL,
-    "entities": ["l6", "l9"]
-}
-
-constraint_dict["c24"] = {
-    "type": PyConstraints.EQUAL,
-    "entities": ["l6", "l10"]
-}
+# constraint_dict["c21"] = {
+#     "type": PyConstraints.EQUAL,
+#     "entities": ["l6", "l7"]
+# }
+#
+# constraint_dict["c22"] = {
+#     "type": PyConstraints.EQUAL,
+#     "entities": ["l6", "l8"]
+# }
+#
+# constraint_dict["c23"] = {
+#     "type": PyConstraints.EQUAL,
+#     "entities": ["l6", "l9"]
+# }
+#
+# constraint_dict["c24"] = {
+#     "type": PyConstraints.EQUAL,
+#     "entities": ["l6", "l10"]
+# }
 
 constraint_dict["c25"] = {
     "type": PyConstraints.POINTON,
