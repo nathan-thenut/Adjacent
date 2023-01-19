@@ -206,7 +206,7 @@ def write_data_to_json_file(
 
 def read_sketch_from_json_data(
     file_path: Path
-) -> tuple[dict[str, tuple[int]], dict[str, list[str]], dict[str, dict]]:
+) -> tuple[dict[str, tuple[float]], dict[str, list[str]], dict[str, dict]]:
     """Reads json data into sketch data for the solver."""
     with open(file_path, "r", encoding="utf8") as file:
         json_data = json.load(file)
@@ -226,6 +226,26 @@ def read_sketch_from_json_data(
             constraint_dict = json_data["constraints"]
 
         return (points, lines, constraint_dict)
+
+
+def read_results(file_path: Path, result: Result,
+                 is_printing: bool) -> dict[str, tuple[float]]:
+    """Read the results in to a dictionary."""
+    with open(file_path, "r", encoding="utf8") as file:
+        json_data = json.load(file)
+        points = {}
+        if "points" in json_data.keys():
+            points_data = json_data["points"]
+            for key in points_data.keys():
+                x = points_data[key][result.name]["x"]
+                y = points_data[key][result.name]["y"]
+                points[key] = (x, y)
+
+        if is_printing:
+            for key, value in points.items():
+                print(f"points[\"{key}\"] = {value}")
+
+    return points
 
 
 def create_constraints(
@@ -267,7 +287,7 @@ def create_constraints(
 
 def create_and_solve_sketch(lines_dict: dict[str, list[str]],
                             circle_dict: dict[str, tuple[str, int]],
-                            points_dict: dict[str, tuple[int]],
+                            points_dict: dict[str, tuple[float]],
                             constraint_dict: dict[str, dict], json_path: Path):
     """Creates an adjacent sketch and solves it."""
     json_data = {}
