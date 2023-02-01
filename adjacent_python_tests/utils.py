@@ -288,7 +288,8 @@ def create_constraints(
 def create_and_solve_sketch(lines_dict: dict[str, list[str]],
                             circle_dict: dict[str, tuple[str, int]],
                             points_dict: dict[str, tuple[float]],
-                            constraint_dict: dict[str, dict], json_path: Path):
+                            constraint_dict: dict[str, dict],
+                            move_dict: dict[str, dict], json_path: Path):
     """Creates an adjacent sketch and solves it."""
     json_data = {}
     fig = plt.figure()
@@ -318,6 +319,7 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
             json_data["lines"] = lines_dict
             json_data["circles"] = circle_dict
             json_data["constraints"] = constraint_dict
+            json_data["moves"] = move_dict
             ax = fig.add_subplot(subplot_int)
             subplot_int += 1
             ax.set_title("Original")
@@ -332,8 +334,7 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
             s.add_entity(cc)
 
         for constraint in constraint_list:
-            if not isinstance(constraint, constraints.PointOn):
-                s.add_constraint(constraint)
+            s.add_constraint(constraint)
 
         # And solve!
         if result == Result.L1:
@@ -342,9 +343,12 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
             s.use_linear_program(False)
         s.update()
 
-        for constraint in constraint_list:
-            if isinstance(constraint, constraints.PointOn):
-                s.add_constraint(constraint)
+        for key in move_dict.keys():
+            new_point = point(key, move_dict[key]["values"])
+            old_point = points[move_dict[key]["point"]]
+            move_expression = old_point.drag_to(new_point.expr())
+            s.add_expressionVector(move_expression)
+
         s.update()
 
         ax2 = fig.add_subplot(subplot_int)
@@ -360,7 +364,7 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
     json_data = add_comparison_data(json_data)
     check_angle_constraints(json_data)
     file_path = write_data_to_json_file(path=json_path, data=json_data)
-    plt.legend()
+    # plt.legend()
     plt.show()
 
     return file_path

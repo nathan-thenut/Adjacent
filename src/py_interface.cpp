@@ -14,6 +14,7 @@ PYBIND11_MODULE(adjacent_api, m)
         .def(py::init<>())
         .def("add_entity", &Sketch::add_entity)
         .def("add_constraint", &Sketch::add_constraint)
+        .def("add_expressionVector", &Sketch::add_expressionVector)
         .def("update", &Sketch::update)
         .def("is_using_linear_program", &Sketch::is_using_linear_program)
         .def("use_linear_program", &Sketch::use_linear_program);
@@ -31,6 +32,7 @@ PYBIND11_MODULE(adjacent_api, m)
     py::class_<PointE, Entity, std::shared_ptr<PointE>>(m, "Point")
         .def(py::init<ParamPtr, ParamPtr, ParamPtr>())
         .def("expr", &PointE::expr)
+        .def("drag_to", &PointE::drag_to)
         .def("eval",
              [](PointE& p) {
                  return std::vector<double>({ p.x->value(), p.y->value(), p.z->value() });
