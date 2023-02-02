@@ -30,10 +30,10 @@
         "non_zero_results": 0
       },
       "L2": {
-        "x": 1.0189514043843646,
-        "y": 3.173,
-        "sum_of_changes": 0.0,
-        "non_zero_results": 0
+        "x": 0.5816471694052369,
+        "y": 3.2122229270273936,
+        "sum_of_changes": 0.47652716200652134,
+        "non_zero_results": 2
       }
     },
     "p3": {
@@ -43,15 +43,15 @@
       },
       "L1": {
         "x": 2.99,
-        "y": 0.52793350909513,
-        "sum_of_changes": 0.0,
-        "non_zero_results": 0
+        "y": -0.3633866458446465,
+        "sum_of_changes": 0.8913201549397766,
+        "non_zero_results": 1
       },
       "L2": {
-        "x": 2.99,
-        "y": 0.52793350909513,
-        "sum_of_changes": 0.0,
-        "non_zero_results": 0
+        "x": 3.145384634041936,
+        "y": -0.05949459890435174,
+        "sum_of_changes": 0.7428127420414173,
+        "non_zero_results": 2
       }
     },
     "p4": {
@@ -107,24 +107,6 @@
         "sum_of_changes": 0.0,
         "non_zero_results": 0
       }
-    },
-    "p7": {
-      "ORIGINAL": {
-        "x": 1.0,
-        "y": -1.0
-      },
-      "L1": {
-        "x": 1.0,
-        "y": -1.0,
-        "sum_of_changes": 0.0,
-        "non_zero_results": 0
-      },
-      "L2": {
-        "x": 1.0,
-        "y": -1.0,
-        "sum_of_changes": 0.0,
-        "non_zero_results": 0
-      }
     }
   },
   "lines": {
@@ -171,23 +153,37 @@
   },
   "circles": {},
   "constraints": {
-    "c10": {
-      "type": "POINTON",
+    "c1": {
+      "type": "ANGLE",
       "entities": [
-        "p1",
-        "p7"
+        "l1",
+        "l2"
+      ],
+      "value": -1.2566370614359172,
+      "value_in_deg": -72.0,
+      "ORIGINAL": 72.00000000094396,
+      "L1": 72.00000000001246,
+      "L2": 71.99999999999129
+    }
+  },
+  "moves": {
+    "m1": {
+      "point": "p1",
+      "values": [
+        1.0,
+        -1.0
       ]
     }
   },
   "Results": {
     "sum_of_changes": {
-      "L1": 1.4697798285288464,
-      "L2": 1.4697798285288464
+      "L1": 2.361099983468623,
+      "L2": 2.6891197325767853
     },
     "non_zero_results": {
-      "L1": 2,
-      "L2": 2
+      "L1": 3,
+      "L2": 6
     },
-    "variables": 14
+    "variables": 12
   }
 }

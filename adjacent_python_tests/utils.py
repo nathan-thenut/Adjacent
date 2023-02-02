@@ -206,7 +206,8 @@ def write_data_to_json_file(
 
 def read_sketch_from_json_data(
     file_path: Path
-) -> tuple[dict[str, tuple[float]], dict[str, list[str]], dict[str, dict]]:
+) -> tuple[dict[str, tuple[float]], dict[str, list[str]], dict[str, dict],
+           dict[str, dict]]:
     """Reads json data into sketch data for the solver."""
     with open(file_path, "r", encoding="utf8") as file:
         json_data = json.load(file)
@@ -225,7 +226,11 @@ def read_sketch_from_json_data(
         if "constraints" in json_data.keys():
             constraint_dict = json_data["constraints"]
 
-        return (points, lines, constraint_dict)
+        move_dict = {}
+        if "moves" in json_data.keys():
+            move_dict = json_data["moves"]
+
+        return (points, lines, constraint_dict, move_dict)
 
 
 def read_results(file_path: Path, result: Result,

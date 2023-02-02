@@ -12,10 +12,10 @@
         "non_zero_results": 0
       },
       "L2": {
-        "x": 0.0,
-        "y": 0.5,
-        "sum_of_changes": 0.5,
-        "non_zero_results": 1
+        "x": -0.004920521611680751,
+        "y": 1.2842832851117088,
+        "sum_of_changes": 0.2892038067233895,
+        "non_zero_results": 2
       }
     },
     "p2": {
@@ -24,15 +24,15 @@
         "y": 1.0
       },
       "L1": {
-        "x": 2.5,
+        "x": 5.0,
         "y": 1.0,
-        "sum_of_changes": 1.5,
+        "sum_of_changes": 1.0,
         "non_zero_results": 1
       },
       "L2": {
-        "x": 3.0,
-        "y": 1.5,
-        "sum_of_changes": 1.5,
+        "x": 4.602911875656123,
+        "y": 0.7255053069921543,
+        "sum_of_changes": 0.877406568663969,
         "non_zero_results": 2
       }
     },
@@ -42,34 +42,16 @@
         "y": 3.0
       },
       "L1": {
-        "x": 2.5,
-        "y": 3.0,
-        "sum_of_changes": 1.5,
-        "non_zero_results": 1
+        "x": 5.0,
+        "y": 4.0,
+        "sum_of_changes": 2.0,
+        "non_zero_results": 2
       },
       "L2": {
-        "x": 2.5,
-        "y": 3.0,
-        "sum_of_changes": 1.5,
-        "non_zero_results": 1
-      }
-    },
-    "p4": {
-      "ORIGINAL": {
-        "x": 2.5,
-        "y": 3.0
-      },
-      "L1": {
-        "x": 2.5,
-        "y": 3.0,
-        "sum_of_changes": 0.0,
-        "non_zero_results": 0
-      },
-      "L2": {
-        "x": 2.5,
-        "y": 3.0,
-        "sum_of_changes": 0.0,
-        "non_zero_results": 0
+        "x": 5.0,
+        "y": 4.0,
+        "sum_of_changes": 2.0,
+        "non_zero_results": 2
       }
     }
   },
@@ -87,31 +69,37 @@
       "p1"
     ]
   },
+  "circles": {},
   "constraints": {
     "c4": {
       "type": "ORTHOGONAL",
       "entities": [
         "l1",
         "l2"
-      ]
-    },
-    "c5": {
-      "type": "POINTON",
-      "entities": [
-        "p3",
-        "p4"
+      ],
+      "ORIGINAL": 90.0,
+      "L1": 90.0,
+      "L2": 76.17134902771986
+    }
+  },
+  "moves": {
+    "m1": {
+      "point": "p3",
+      "values": [
+        5,
+        4
       ]
     }
   },
   "Results": {
     "sum_of_changes": {
       "L1": 3.0,
-      "L2": 3.5
+      "L2": 3.1666103753873585
     },
     "non_zero_results": {
-      "L1": 2,
-      "L2": 4
+      "L1": 3,
+      "L2": 6
     },
-    "variables": 8
+    "variables": 6
   }
 }

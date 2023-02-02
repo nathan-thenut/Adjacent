@@ -13,8 +13,6 @@ points["p4"] = (2.031995020634442, -2.517)
 points["p5"] = (-1.8489975458714059, -2.517)
 points["p6"] = (-3.0, 1.8055)
 
-points["p7"] = (1.0, -1.0)
-
 lines = {}
 lines["l1"] = ["p1", "p2"]
 lines["l2"] = ["p1", "p3"]
@@ -73,13 +71,13 @@ constraint_dict["c5"] = {
 #     "entities": ["l6", "l10"]
 # }
 #
-constraint_dict["c10"] = {
-    "type": PyConstraints.POINTON,
-    "entities": ["p1", "p7"],
-}
+
+move_dict = {}
+move_dict["m1"] = {"point": "p1", "values": (1.0, -1.0)}
 
 create_and_solve_sketch(lines_dict=lines,
                         circle_dict={},
                         points_dict=points,
                         constraint_dict=constraint_dict,
+                        move_dict=move_dict,
                         json_path=Path("/home/nathan/Downloads/Books"))

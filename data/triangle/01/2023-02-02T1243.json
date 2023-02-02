@@ -53,24 +53,6 @@
         "sum_of_changes": 1.0,
         "non_zero_results": 1
       }
-    },
-    "p4": {
-      "ORIGINAL": {
-        "x": 4.0,
-        "y": 4.0
-      },
-      "L1": {
-        "x": 4.0,
-        "y": 4.0,
-        "sum_of_changes": 0.0,
-        "non_zero_results": 0
-      },
-      "L2": {
-        "x": 4.0,
-        "y": 4.0,
-        "sum_of_changes": 0.0,
-        "non_zero_results": 0
-      }
     }
   },
   "lines": {
@@ -87,19 +69,25 @@
       "p1"
     ]
   },
+  "circles": {},
   "constraints": {
     "c4": {
       "type": "ORTHOGONAL",
       "entities": [
         "l1",
         "l2"
-      ]
-    },
-    "c5": {
-      "type": "POINTON",
-      "entities": [
-        "p3",
-        "p4"
+      ],
+      "ORIGINAL": 90.0,
+      "L1": 90.0,
+      "L2": 90.0
+    }
+  },
+  "moves": {
+    "m1": {
+      "point": "p3",
+      "values": [
+        4,
+        4
       ]
     }
   },
@@ -112,6 +100,6 @@
       "L1": 1,
       "L2": 1
     },
-    "variables": 8
+    "variables": 6
   }
 }
