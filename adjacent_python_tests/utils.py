@@ -253,6 +253,35 @@ def read_results(file_path: Path, result: Result,
     return points
 
 
+def read_results_to_latex_table(file_path: Path,
+                                is_printing: bool) -> list[str]:
+    """Read the results in to a dictionary."""
+    # $P_{10}(x,y)$ & (1.929, -0.623) & (1.786, -0.332) & (1.709, -0.415)\\
+    with open(file_path, "r", encoding="utf8") as file:
+        json_data = json.load(file)
+        points = []
+        if "points" in json_data.keys():
+            points_data = json_data["points"]
+            point_count = 1
+            for key in points_data.keys():
+                point_str = f"$P_{{{point_count}}}(x,y)$"
+                pnt = points_data[key]
+                for result in pnt.keys():
+                    x = points_data[key][result]["x"]
+                    y = points_data[key][result]["y"]
+                    point_str = point_str + f" & ({x:.3f}, {y:.3f})"
+
+                point_str = point_str + "\\\\"
+                points.append(point_str)
+                point_count += 1
+
+        if is_printing:
+            for pnt_str in points:
+                print(pnt_str)
+
+    return points
+
+
 def create_constraints(
     lines: dict[str, Line],
     points: dict[str, Point],
@@ -367,7 +396,8 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
                                             result=result)
 
     json_data = add_comparison_data(json_data)
-    check_angle_constraints(json_data)
+    # this doesn't return the correct values
+    # check_angle_constraints(json_data)
     file_path = write_data_to_json_file(path=json_path, data=json_data)
     # plt.legend()
     plt.show()

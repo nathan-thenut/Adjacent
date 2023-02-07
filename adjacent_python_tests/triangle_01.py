@@ -24,11 +24,11 @@ B = 2
 C = np.sqrt(np.sum(np.square([A, B])))
 
 constraint_dict = {}
-# constraint_dict["c1"] = {
-#     "type": PyConstraints.LENGTH,
-#     "entities": ["l1"],
-#     "value": A
-# }
+constraint_dict["c1"] = {
+    "type": PyConstraints.LENGTH,
+    "entities": ["l1"],
+    "value": A
+}
 
 # constraint_dict["c2"] = {
 #     "type": PyConstraints.LENGTH,
@@ -48,7 +48,7 @@ constraint_dict["c4"] = {
 }
 
 move_dict = {}
-move_dict["m1"] = {"point": "p3", "values": (5, 2)}
+move_dict["m1"] = {"point": "p1", "values": (0, 0)}
 
 create_and_solve_sketch(lines_dict=lines,
                         circle_dict={},
