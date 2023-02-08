@@ -50,11 +50,32 @@ def add_lines_to_plot(figure_or_ax,
         l_z = [source_coords[2], target_coords[2]]
 
         if three_d:
-            figure_or_ax.scatter(l_x, l_y, l_z)
+            # figure_or_ax.scatter(l_x, l_y, l_z)
             figure_or_ax.plot(l_x, l_y, l_z, label=key)
         else:
-            figure_or_ax.scatter(l_x, l_y)
+            # figure_or_ax.scatter(l_x, l_y)
             figure_or_ax.plot(l_x, l_y, label=key)
+
+
+def add_points_to_plot(figure_or_ax,
+                       points: dict[str, Point],
+                       three_d: bool = False):
+    """Add Points from Adjacent to a matplotlib plot."""
+    for key in points.keys():
+        coords = points[key].eval()
+        p_x = coords[0]
+        p_y = coords[1]
+        p_z = coords[2]
+
+        if three_d:
+            figure_or_ax.plot(p_x, p_y, p_z, 'ko')
+            # figure_or_ax.annotate(key, (p_x, p_y, p_z), fontsize=12)
+        else:
+            figure_or_ax.plot(p_x, p_y, 'ko')
+            # figure_or_ax.annotate(key, (p_x, p_y),
+            #                       xytext=(p_x + 0.1, p_y + 0.1),
+            #                       textcoords='offset points',
+            #                       fontsize=12)
 
 
 def add_circles_to_plot(figure_or_ax, circles: dict[str, Circle]):
@@ -358,6 +379,7 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
             subplot_int += 1
             ax.set_title("Original")
             add_lines_to_plot(ax, lines)
+            add_points_to_plot(ax, points)
             add_circles_to_plot(ax, circles)
 
         s = Sketch()
@@ -389,6 +411,7 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
         subplot_int += 1
         ax2.set_title(f"{result.name}")
         add_lines_to_plot(ax2, lines)
+        add_points_to_plot(ax2, points)
         add_circles_to_plot(ax2, circles)
 
         json_data = export_entities_to_dict(points=points,
