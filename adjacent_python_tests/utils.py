@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from enum import Enum
 from pathlib import Path
 from datetime import datetime
+from angle_annotation import AngleAnnotation
 from adjacent_api import *
 
 
@@ -22,6 +23,26 @@ class PyConstraints(str, Enum):
     ANGLE = "ANGLE"
     CENTER_TRIANGLE = "CENTER_TRIANGLE"
     MIDPOINT = "MIDPOINT"
+
+
+def get_intersection(a1, a2, b1, b2):
+    """
+    Returns the point of intersection of the lines passing through a2,a1 and b2,b1.
+    a1: [x, y] a point on the first line
+    a2: [x, y] another point on the first line
+    b1: [x, y] a point on the second line
+    b2: [x, y] another point on the second line
+    Source: https://stackoverflow.com/questions/3252194/
+            numpy-and-line-intersections/42727584#42727584
+    """
+    s = np.vstack([a1, a2, b1, b2])  # s for stacked
+    h = np.hstack((s, np.ones((4, 1))))  # h for homogeneous
+    l1 = np.cross(h[0], h[1])  # get first line
+    l2 = np.cross(h[2], h[3])  # get second line
+    x, y, z = np.cross(l1, l2)  # point of intersection
+    if z == 0:  # lines are parallel
+        return (float('inf'), float('inf'))
+    return (x / z, y / z)
 
 
 # helper function
@@ -92,6 +113,50 @@ def add_circles_to_plot(figure_or_ax, circles: dict[str, Circle]):
         figure_or_ax.scatter(center_coords[0], center_coords[1])
         figure_or_ax.set_aspect("equal", adjustable="datalim")
         figure_or_ax.autoscale()
+
+
+def add_annotations_for_angle_constraints(figure_or_ax, lines: dict[str, Line],
+                                          constraints: dict[str, dict]):
+    """Adds annotations for angle constraints to a matplotlib plot."""
+    angle_constraints = [PyConstraints.ANGLE, PyConstraints.ORTHOGONAL]
+
+    for key in constraints.keys():
+        constraint = constraints[key]
+        if constraint["type"] in angle_constraints:
+            line1 = lines[constraint["entities"][0]]
+            line2 = lines[constraint["entities"][1]]
+            line1_coords = [line1.source().eval(), line1.target().eval()]
+            line2_coords = [line2.source().eval(), line2.target().eval()]
+            if line1_coords[0] in line2_coords:
+                center_coords = line1_coords[0]
+            if line1_coords[1] in line2_coords:
+                center_coords = line1_coords[1]
+
+            if not center_coords:
+                center_coords = get_intersection(
+                    line1_coords[0][:2],
+                    line1_coords[1][:2],
+                    line2_coords[0][:2],
+                    line2_coords[1][:2],
+                )
+                line1_coords.remove()
+                line2_coords.remove()
+
+            line1_coords.remove(center_coords)
+            line2_coords.remove(center_coords)
+            if constraint["type"] == PyConstraints.ORTHOGONAL:
+                value = 90
+            else:
+                value = int(abs(np.rad2deg(constraint["value"])))
+            annotation = AngleAnnotation(
+                center_coords[:2],
+                line2_coords[0][:2],
+                line1_coords[0][:2],
+                ax=figure_or_ax,
+                size=75,
+                text=f"{value}°",
+                textposition="edge",
+                text_kw=dict(bbox=dict(boxstyle="round", fc="w")))
 
 
 def export_entities_to_dict(
@@ -348,6 +413,7 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
     """Creates an adjacent sketch and solves it."""
     json_data = {}
     fig = plt.figure()
+    fig.canvas.draw()
     subplot_int = 131
 
     for result in [Result.L1, Result.L2]:
@@ -381,6 +447,7 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
             add_lines_to_plot(ax, lines)
             add_points_to_plot(ax, points)
             add_circles_to_plot(ax, circles)
+            add_annotations_for_angle_constraints(ax, lines, constraint_dict)
 
         s = Sketch()
         for line in lines.values():
@@ -413,6 +480,7 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
         add_lines_to_plot(ax2, lines)
         add_points_to_plot(ax2, points)
         add_circles_to_plot(ax2, circles)
+        add_annotations_for_angle_constraints(ax2, lines, constraint_dict)
 
         json_data = export_entities_to_dict(points=points,
                                             data=json_data,
