@@ -48,7 +48,7 @@ constraint_dict["c4"] = {
 }
 
 move_dict = {}
-move_dict["m1"] = {"point": "p1", "values": (0, 0)}
+move_dict["m1"] = {"point": "p1", "values": (2, 1)}
 
 create_and_solve_sketch(lines_dict=lines,
                         circle_dict={},

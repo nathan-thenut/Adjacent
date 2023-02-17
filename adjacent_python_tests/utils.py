@@ -214,21 +214,27 @@ def add_comparison_data(data: dict[str, dict]) -> dict[str, dict]:
     variables = 0
     sum_of_changes = {}
     non_zero_results = {}
+    moved_points = []
     for result in [Result.L1.name, Result.L2.name]:
         sum_of_changes[result] = 0
         non_zero_results[result] = 0
+
+    if "moves" in new_data.keys():
+        for move in new_data["moves"].keys():
+            moved_points.append(new_data["moves"][move]["point"])
 
     if "points" in new_data.keys():
         for pnt in new_data["points"].keys():
             variables += 2
             points = new_data["points"]
-            add_comparison_data_to_point(points[pnt])
-            for result in [Result.L1.name, Result.L2.name]:
-                if result in points[pnt].keys():
-                    sum_of_changes[result] += points[pnt][result][
-                        "sum_of_changes"]
-                    non_zero_results[result] += points[pnt][result][
-                        "non_zero_results"]
+            if pnt not in moved_points:
+                add_comparison_data_to_point(points[pnt])
+                for result in [Result.L1.name, Result.L2.name]:
+                    if result in points[pnt].keys():
+                        sum_of_changes[result] += points[pnt][result][
+                            "sum_of_changes"]
+                        non_zero_results[result] += points[pnt][result][
+                            "non_zero_results"]
 
     results = {}
     results["sum_of_changes"] = sum_of_changes
