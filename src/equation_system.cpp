@@ -503,6 +503,7 @@ SolveResult EquationSystem::solve()
                     std::cout << current_params[i]->to_string() << std::endl;
                 }
             }
+            counted_steps = steps;
             return SolveResult::OKAY;
         }
         eval_jacobian(J, A, !is_drag_step);
@@ -545,5 +546,6 @@ SolveResult EquationSystem::solve()
         dof_changed = false;
     }
 
+    counted_steps = steps;
     return SolveResult::DIDNT_CONVERGE;
 }

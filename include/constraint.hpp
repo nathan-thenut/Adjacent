@@ -959,7 +959,7 @@ public:
         sys.use_linear_program = use_lp;
     }
 
-    void update()
+    int update()
     {
         if (is_constraints_changed() || is_entities_changed())
         {
@@ -980,6 +980,7 @@ public:
         constraintsTopologyChanged = false;
         entitiesChanged = false;
         loopsChanged = false;
+        return sys.counted_steps;
     }
 
     void generate_equations(EquationSystem& system)

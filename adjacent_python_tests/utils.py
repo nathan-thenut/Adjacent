@@ -1,9 +1,10 @@
-import json
-import numpy as np
-import matplotlib.pyplot as plt
 from enum import Enum
 from pathlib import Path
 from datetime import datetime
+from time import time
+import json
+import numpy as np
+import matplotlib.pyplot as plt
 from angle_annotation import AngleAnnotation
 from adjacent_api import *
 
@@ -452,6 +453,10 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
     fig = plt.figure()
     fig.canvas.draw()
     subplot_int = 131
+    l1_time = 0.0
+    l2_time = 0.0
+    l1_steps = 0
+    l2_steps = 0
 
     for result in [Result.L1, Result.L2]:
 
@@ -501,7 +506,6 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
             s.use_linear_program(True)
         else:
             s.use_linear_program(False)
-        s.update()
 
         for key in move_dict.keys():
             new_point = point(key, move_dict[key]["values"])
@@ -509,7 +513,16 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
             move_expression = old_point.drag_to(new_point.expr())
             s.add_expressionVector(move_expression)
 
-        s.update()
+        t1_start = time()
+        steps = s.update()
+        t1_stop = time()
+
+        if result == Result.L1:
+            l1_time = t1_stop - t1_start
+            l1_steps = steps
+        else:
+            l2_time = t1_stop - t1_start
+            l2_steps = steps
 
         ax2 = fig.add_subplot(subplot_int)
         subplot_int += 1
@@ -524,6 +537,12 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
                                             result=result)
 
     json_data = add_comparison_data(json_data)
+    json_data["Results"]["time"] = {}
+    json_data["Results"]["time"]["L1"] = l1_time
+    json_data["Results"]["time"]["L2"] = l2_time
+    json_data["Results"]["steps"] = {}
+    json_data["Results"]["steps"]["L1"] = l1_steps
+    json_data["Results"]["steps"]["L2"] = l2_steps
     # this doesn't return the correct values
     # check_angle_constraints(json_data)
     file_path = write_data_to_json_file(path=json_path, data=json_data)

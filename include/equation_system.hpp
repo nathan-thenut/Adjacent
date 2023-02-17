@@ -30,6 +30,7 @@ public:
 
     std::string stats;
     bool dof_changed;
+    int counted_steps;
 
     xt::xtensor<std::shared_ptr<Expr>, 2> J;
     xt::xtensor<double, 2> A;
