@@ -212,11 +212,13 @@ def add_comparison_data(data: dict[str, dict]) -> dict[str, dict]:
     """Add data to compare the different solutions."""
     new_data = data
     variables = 0
-    sum_of_changes = {}
+    l1_norm = {}
+    l2_norm = {}
     non_zero_results = {}
     moved_points = []
     for result in [Result.L1.name, Result.L2.name]:
-        sum_of_changes[result] = 0
+        l1_norm[result] = 0
+        l2_norm[result] = 0
         non_zero_results[result] = 0
 
     if "moves" in new_data.keys():
@@ -231,13 +233,14 @@ def add_comparison_data(data: dict[str, dict]) -> dict[str, dict]:
                 add_comparison_data_to_point(points[pnt])
                 for result in [Result.L1.name, Result.L2.name]:
                     if result in points[pnt].keys():
-                        sum_of_changes[result] += points[pnt][result][
-                            "sum_of_changes"]
+                        l1_norm[result] += points[pnt][result]["l1_norm"]
+                        l2_norm[result] += points[pnt][result]["l2_norm"]
                         non_zero_results[result] += points[pnt][result][
                             "non_zero_results"]
 
     results = {}
-    results["sum_of_changes"] = sum_of_changes
+    results["l1_norm"] = l1_norm
+    results["l2_norm"] = l2_norm
     results["non_zero_results"] = non_zero_results
     results["variables"] = variables
     new_data["Results"] = results
@@ -249,20 +252,34 @@ def add_comparison_data_to_point(point_data: dict[str, dict]):
     original_data = point_data[Result.ORIGINAL.name]
     for result in [Result.L1.name, Result.L2.name]:
         if result in point_data.keys():
-            soc = calculate_sum_of_changes(original_data, point_data[result])
-            point_data[result]["sum_of_changes"] = soc
+            l1_norm = calculate_l1_norm(original_data, point_data[result])
+            l2_norm = calculate_l2_norm(original_data, point_data[result])
+            point_data[result]["l1_norm"] = l1_norm
+            point_data[result]["l2_norm"] = l2_norm
             non_zero_results = count_non_zeroes_in_result(
                 original_data, point_data[result])
             point_data[result]["non_zero_results"] = non_zero_results
 
 
-def calculate_sum_of_changes(
+def calculate_l1_norm(
     original: dict[str, float],
     new: dict[str, float],
 ) -> float:
-    """Calculate the sum of changes between original and new point data."""
+    """Calculate the l1 norm between original and new point data."""
     return np.sum(
         np.abs([
+            original["x"] - new["x"],
+            original["y"] - new["y"],
+        ]))
+
+
+def calculate_l2_norm(
+    original: dict[str, float],
+    new: dict[str, float],
+) -> float:
+    """Calculate the l2_norm between original and new point data."""
+    return np.sum(
+        np.square([
             original["x"] - new["x"],
             original["y"] - new["y"],
         ]))
