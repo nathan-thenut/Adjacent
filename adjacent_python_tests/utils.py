@@ -61,9 +61,23 @@ def circle(name, center, radius):
 
 def add_lines_to_plot(figure_or_ax,
                       lines: dict[str, Line],
+                      constraint_dict: dict[str, dict],
                       three_d: bool = False):
     """Add Lines from Adjacent to a matplotlib plot."""
+
+    blue = '#1f77b4'
+    red = 'red'
+    constrained_lines = []
+    for key in constraint_dict.keys():
+        constraint = constraint_dict[key]
+        if constraint["type"] == PyConstraints.LENGTH.name:
+            constrained_lines.extend(constraint["entities"])
+
     for key in lines.keys():
+        col = blue
+        if key in constrained_lines:
+            col = red
+
         source_coords = lines[key].source().eval()
         target_coords = lines[key].target().eval()
         l_x = [source_coords[0], target_coords[0]]
@@ -75,7 +89,7 @@ def add_lines_to_plot(figure_or_ax,
             figure_or_ax.plot(l_x, l_y, l_z, label=key)
         else:
             # figure_or_ax.scatter(l_x, l_y)
-            figure_or_ax.plot(l_x, l_y, label=key)
+            figure_or_ax.plot(l_x, l_y, label=key, color=col)
 
 
 def add_points_to_plot(figure_or_ax,
@@ -148,15 +162,15 @@ def add_annotations_for_angle_constraints(figure_or_ax, lines: dict[str, Line],
                 value = 90
             else:
                 value = int(abs(np.rad2deg(constraint["value"])))
-            annotation = AngleAnnotation(
-                center_coords[:2],
-                line2_coords[0][:2],
-                line1_coords[0][:2],
-                ax=figure_or_ax,
-                size=75,
-                text=f"{value}°",
-                textposition="edge",
-                text_kw=dict(bbox=dict(boxstyle="round", fc="w")))
+            AngleAnnotation(center_coords[:2],
+                            line2_coords[0][:2],
+                            line1_coords[0][:2],
+                            ax=figure_or_ax,
+                            size=75,
+                            color="red",
+                            text=f"{value}°",
+                            textposition="edge",
+                            text_kw=dict(bbox=dict(boxstyle="round", fc="w")))
 
 
 def export_entities_to_dict(
@@ -467,7 +481,7 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
             ax = fig.add_subplot(subplot_int)
             subplot_int += 1
             ax.set_title("Original")
-            add_lines_to_plot(ax, lines)
+            add_lines_to_plot(ax, lines, constraint_dict)
             add_points_to_plot(ax, points)
             add_circles_to_plot(ax, circles)
             add_annotations_for_angle_constraints(ax, lines, constraint_dict)
@@ -500,7 +514,7 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
         ax2 = fig.add_subplot(subplot_int)
         subplot_int += 1
         ax2.set_title(f"{result.name}")
-        add_lines_to_plot(ax2, lines)
+        add_lines_to_plot(ax2, lines, constraint_dict)
         add_points_to_plot(ax2, points)
         add_circles_to_plot(ax2, circles)
         add_annotations_for_angle_constraints(ax2, lines, constraint_dict)
