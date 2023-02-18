@@ -6,9 +6,9 @@ from utils import (
 )
 
 points = {}
-points["p1"] = (0, 1)
-points["p2"] = (4, 1)
-points["p3"] = (4, 3)
+points["p1"] = (3, 1)
+points["p2"] = (7, 1)
+points["p3"] = (7, 3)
 
 # points["p1"] = (2.0, 1.0)
 # points["p2"] = (6.0, 1.0)
@@ -48,7 +48,7 @@ constraint_dict["c4"] = {
 }
 
 move_dict = {}
-move_dict["m1"] = {"point": "p1", "values": (2, 1)}
+move_dict["m1"] = {"point": "p1", "values": (4, 1)}
 
 create_and_solve_sketch(lines_dict=lines,
                         circle_dict={},

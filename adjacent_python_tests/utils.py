@@ -167,7 +167,7 @@ def add_annotations_for_angle_constraints(figure_or_ax, lines: dict[str, Line],
                             line2_coords[0][:2],
                             line1_coords[0][:2],
                             ax=figure_or_ax,
-                            size=75,
+                            size=40,
                             color="red",
                             text=f"{value}°",
                             textposition="edge",
@@ -450,9 +450,9 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
                             move_dict: dict[str, dict], json_path: Path):
     """Creates an adjacent sketch and solves it."""
     json_data = {}
-    fig = plt.figure()
+    fig, axes = plt.subplots(1, 3, sharex='row', sharey='row')
     fig.canvas.draw()
-    subplot_int = 131
+    subplot_int = 0
     l1_time = 0.0
     l2_time = 0.0
     l1_steps = 0
@@ -483,13 +483,13 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
             json_data["circles"] = circle_dict
             json_data["constraints"] = constraint_dict
             json_data["moves"] = move_dict
-            ax = fig.add_subplot(subplot_int)
-            subplot_int += 1
+            ax = axes[subplot_int]
             ax.set_title("Original")
             add_lines_to_plot(ax, lines, constraint_dict)
             add_points_to_plot(ax, points)
             add_circles_to_plot(ax, circles)
             add_annotations_for_angle_constraints(ax, lines, constraint_dict)
+            subplot_int += 1
 
         s = Sketch()
         for line in lines.values():
@@ -524,13 +524,13 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
             l2_time = t1_stop - t1_start
             l2_steps = steps
 
-        ax2 = fig.add_subplot(subplot_int)
-        subplot_int += 1
+        ax2 = axes[subplot_int]
         ax2.set_title(f"{result.name}")
         add_lines_to_plot(ax2, lines, constraint_dict)
         add_points_to_plot(ax2, points)
         add_circles_to_plot(ax2, circles)
         add_annotations_for_angle_constraints(ax2, lines, constraint_dict)
+        subplot_int += 1
 
         json_data = export_entities_to_dict(points=points,
                                             data=json_data,
