@@ -377,9 +377,9 @@ def read_results(file_path: Path, result: Result,
     return points
 
 
-def read_results_to_latex_table(file_path: Path,
-                                is_printing: bool) -> list[str]:
-    """Read the results in to a dictionary."""
+def read_points_to_latex_table(file_path: Path,
+                               is_printing: bool) -> list[str]:
+    """Read the points in to a latex table."""
     # $P_{10}(x,y)$ & (1.929, -0.623) & (1.786, -0.332) & (1.709, -0.415)\\
     with open(file_path, "r", encoding="utf8") as file:
         json_data = json.load(file)
@@ -404,6 +404,36 @@ def read_results_to_latex_table(file_path: Path,
                 print(pnt_str)
 
     return points
+
+
+def read_results_to_latex_table(file_path: Path,
+                                is_printing: bool) -> list[str]:
+    """Read the results in to a latex table."""
+    # L1 & 0.0007 & 1 & 1.5 & 2.25 & 1\\
+    with open(file_path, "r", encoding="utf8") as file:
+        json_data = json.load(file)
+        results = []
+        order = ["time", "steps", "l1_norm", "l2_norm", "non_zero_results"]
+        if "Results" in json_data.keys():
+            result_data = json_data["Results"]
+            for result in [Result.L1, Result.L2]:
+                result_str = f"{result.name}"
+                for key in order:
+                    data = result_data[key][result.name]
+                    if key == "time":
+                        res = f"{data:.5f}"
+                    elif key in ["l1_norm", "l2_norm"]:
+                        res = f"{data:.3f}"
+                    else:
+                        res = f"{data}"
+                    result_str = result_str + " & " + res
+                result_str = result_str + "\\\\"
+                results.append(result_str)
+        if is_printing:
+            for res_str in results:
+                print(res_str)
+
+    return results
 
 
 def create_constraints(
