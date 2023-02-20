@@ -142,6 +142,7 @@ def add_annotations_for_angle_constraints(figure_or_ax, lines: dict[str, Line],
             line2 = lines[constraint["entities"][1]]
             line1_coords = [line1.source().eval(), line1.target().eval()]
             line2_coords = [line2.source().eval(), line2.target().eval()]
+            center_coords = []
             if line1_coords[0] in line2_coords:
                 center_coords = line1_coords[0]
             if line1_coords[1] in line2_coords:
@@ -154,11 +155,16 @@ def add_annotations_for_angle_constraints(figure_or_ax, lines: dict[str, Line],
                     line2_coords[0][:2],
                     line2_coords[1][:2],
                 )
-                line1_coords.remove()
-                line2_coords.remove()
-
-            line1_coords.remove(center_coords)
-            line2_coords.remove(center_coords)
+                print(center_coords)
+                if center_coords in line1_coords:
+                    line1_coords.remove(center_coords)
+                    del line2_coords[0]
+                elif center_coords in line2_coords:
+                    line2_coords.remove(center_coords)
+                    del line1_coords[0]
+            else:
+                line1_coords.remove(center_coords)
+                line2_coords.remove(center_coords)
             if constraint["type"] == PyConstraints.ORTHOGONAL:
                 value = 90
             else:
@@ -518,7 +524,7 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
             add_lines_to_plot(ax, lines, constraint_dict)
             add_points_to_plot(ax, points)
             add_circles_to_plot(ax, circles)
-            add_annotations_for_angle_constraints(ax, lines, constraint_dict)
+            # add_annotations_for_angle_constraints(ax, lines, constraint_dict)
             subplot_int += 1
 
         s = Sketch()
@@ -559,7 +565,7 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
         add_lines_to_plot(ax2, lines, constraint_dict)
         add_points_to_plot(ax2, points)
         add_circles_to_plot(ax2, circles)
-        add_annotations_for_angle_constraints(ax2, lines, constraint_dict)
+        # add_annotations_for_angle_constraints(ax2, lines, constraint_dict)
         subplot_int += 1
 
         json_data = export_entities_to_dict(points=points,
