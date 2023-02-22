@@ -90,7 +90,72 @@ def triangle_01_norms_boxplot():
     plt.show()
 
 
+def triangle_02_runtime_boxplot():
+    """Creates a boxplot for triangle 02 time values."""
+    main_path = Path("/home/nathan/Uni-Stuff/CG/Adjacent/data/triangle/02/")
+    paths = [(main_path / "length_1"), (main_path / "length_2"),
+             (main_path / "length_3"), (main_path / "length_4"),
+             (main_path / "length_5")]
+
+    fig, axes = plt.subplots(2, 1)
+    l1_plots = []
+    l2_plots = []
+    for path in paths:
+        results, avg = get_results_from_dir(path)
+        l1_plots.append(results["time"]["L1"])
+        l2_plots.append(results["time"]["L2"])
+
+    l1_ax = axes[0]
+    l2_ax = axes[1]
+    l1_ax.boxplot(l1_plots)
+    l1_ax.set_title('L1')
+    l1_ax.set_xticklabels(['1', '2', '3', '4', '5'])
+    l1_ax.set_xlabel('Distance')
+    l1_ax.set_ylabel('Time (s)')
+
+    l2_ax.boxplot(l2_plots)
+    l2_ax.set_title('L2')
+    l2_ax.set_xticklabels(['1', '2', '3', '4', '5'])
+    l2_ax.set_xlabel('Distance')
+    l2_ax.set_ylabel('Time (s)')
+
+    plt.show()
+
+
+def triangle_02_norms_boxplot():
+    """Creates a boxplot for triangle 02 norm values."""
+    main_path = Path("/home/nathan/Uni-Stuff/CG/Adjacent/data/triangle/02/")
+    paths = [(main_path / "length_1"), (main_path / "length_2"),
+             (main_path / "length_3"), (main_path / "length_4"),
+             (main_path / "length_5")]
+
+    fig, axes = plt.subplots(2, 1)
+    l1_plots = []
+    l2_plots = []
+    for path in paths:
+        results, avg = get_results_from_dir(path)
+        l1_plots.append(results["l1_norm"]["L1"])
+        l2_plots.append(results["l1_norm"]["L2"])
+
+    l1_ax = axes[0]
+    l2_ax = axes[1]
+    l1_ax.boxplot(l1_plots)
+    l1_ax.set_title('L1')
+    l1_ax.set_xticklabels(['1', '2', '3', '4', '5'])
+    l1_ax.set_xlabel('Distance')
+    l1_ax.set_ylabel('$l_1$ norm')
+
+    l2_ax.boxplot(l2_plots)
+    l2_ax.set_title('L2')
+    l2_ax.set_xticklabels(['1', '2', '3', '4', '5'])
+    l2_ax.set_xlabel('Distance')
+    l2_ax.set_ylabel('$l_1$ norm')
+
+    plt.show()
+
+
 if __name__ == '__main__':
-    results, avg = get_results_from_dir(
-        Path("/home/nathan/Downloads/Books/triangle-02/"))
-    pprint.pprint(avg)
+    # results, avg = get_results_from_dir(
+    #     Path("/home/nathan/Uni-Stuff/CG/Adjacent/data/triangle/02/length_5"))
+    # pprint.pprint(avg)
+    triangle_02_norms_boxplot()

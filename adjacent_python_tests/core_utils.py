@@ -355,6 +355,7 @@ def write_data_to_json_file(path: Path,
     time_str = timestamp.strftime("%Y-%m-%dT%H%M")
     filename = time_str + f"--{counter}" + ".json"
     filepath = path / filename
+    print(f"Writing to {filepath}")
     with open(filepath, "w", encoding="utf8") as file:
         json_string = json.dumps(data, indent=2)
         file.write(json_string)
