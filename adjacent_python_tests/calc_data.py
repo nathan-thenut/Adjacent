@@ -41,6 +41,35 @@ def get_results_from_dir(path: Path) -> (dict[str, dict], dict[str, dict]):
     return (overall_results, avg_results)
 
 
+def two_row_boxplot(paths: list[Path], xticklabels: list[str], key: str,
+                    xlabel: str, ylabel: str):
+    """Creates a two row boxplot."""
+
+    fig, axes = plt.subplots(2, 1)
+    l1_plots = []
+    l2_plots = []
+    for path in paths:
+        results, avg = get_results_from_dir(path)
+        l1_plots.append(results[key]["L1"])
+        l2_plots.append(results[key]["L2"])
+
+    l1_ax = axes[0]
+    l2_ax = axes[1]
+    l1_ax.boxplot(l1_plots)
+    l1_ax.set_title('L1')
+    l1_ax.set_xticklabels(xticklabels)
+    l1_ax.set_xlabel(xlabel)
+    l1_ax.set_ylabel(ylabel)
+
+    l2_ax.boxplot(l2_plots)
+    l2_ax.set_title('L2')
+    l2_ax.set_xticklabels(xticklabels)
+    l2_ax.set_xlabel(xlabel)
+    l2_ax.set_ylabel(ylabel)
+
+    plt.show()
+
+
 def triangle_01_runtime_boxplot():
     """Creates a boxplot for triangle 01 time values."""
     path = Path("/home/nathan/Downloads/Books/triangle-01/")
@@ -90,72 +119,30 @@ def triangle_01_norms_boxplot():
     plt.show()
 
 
-def triangle_02_runtime_boxplot():
-    """Creates a boxplot for triangle 02 time values."""
-    main_path = Path("/home/nathan/Uni-Stuff/CG/Adjacent/data/triangle/02/")
-    paths = [(main_path / "length_1"), (main_path / "length_2"),
-             (main_path / "length_3"), (main_path / "length_4"),
-             (main_path / "length_5")]
-
-    fig, axes = plt.subplots(2, 1)
-    l1_plots = []
-    l2_plots = []
-    for path in paths:
-        results, avg = get_results_from_dir(path)
-        l1_plots.append(results["time"]["L1"])
-        l2_plots.append(results["time"]["L2"])
-
-    l1_ax = axes[0]
-    l2_ax = axes[1]
-    l1_ax.boxplot(l1_plots)
-    l1_ax.set_title('L1')
-    l1_ax.set_xticklabels(['1', '2', '3', '4', '5'])
-    l1_ax.set_xlabel('Distance')
-    l1_ax.set_ylabel('Time (s)')
-
-    l2_ax.boxplot(l2_plots)
-    l2_ax.set_title('L2')
-    l2_ax.set_xticklabels(['1', '2', '3', '4', '5'])
-    l2_ax.set_xlabel('Distance')
-    l2_ax.set_ylabel('Time (s)')
-
-    plt.show()
-
-
-def triangle_02_norms_boxplot():
+def triangle_02_boxplots():
     """Creates a boxplot for triangle 02 norm values."""
     main_path = Path("/home/nathan/Uni-Stuff/CG/Adjacent/data/triangle/02/")
-    paths = [(main_path / "length_1"), (main_path / "length_2"),
-             (main_path / "length_3"), (main_path / "length_4"),
-             (main_path / "length_5")]
+    paths = [(main_path / "length_05"), (main_path / "length_1"),
+             (main_path / "length_2"), (main_path / "length_3"),
+             (main_path / "length_4"), (main_path / "length_5")]
 
-    fig, axes = plt.subplots(2, 1)
-    l1_plots = []
-    l2_plots = []
-    for path in paths:
-        results, avg = get_results_from_dir(path)
-        l1_plots.append(results["l1_norm"]["L1"])
-        l2_plots.append(results["l1_norm"]["L2"])
+    # norm plot settings
+    xticklabels = ['0.5', '1', '2', '3', '4', '5']
+    two_row_boxplot(paths,
+                    xticklabels,
+                    key="l1_norm",
+                    xlabel="Distance",
+                    ylabel='$l_1$ norm')
 
-    l1_ax = axes[0]
-    l2_ax = axes[1]
-    l1_ax.boxplot(l1_plots)
-    l1_ax.set_title('L1')
-    l1_ax.set_xticklabels(['1', '2', '3', '4', '5'])
-    l1_ax.set_xlabel('Distance')
-    l1_ax.set_ylabel('$l_1$ norm')
-
-    l2_ax.boxplot(l2_plots)
-    l2_ax.set_title('L2')
-    l2_ax.set_xticklabels(['1', '2', '3', '4', '5'])
-    l2_ax.set_xlabel('Distance')
-    l2_ax.set_ylabel('$l_1$ norm')
-
-    plt.show()
+    # two_row_boxplot(paths,
+    #                 xticklabels,
+    #                 key="time",
+    #                 xlabel="Distance",
+    #                 ylabel='Time (s)')
 
 
 if __name__ == '__main__':
     # results, avg = get_results_from_dir(
     #     Path("/home/nathan/Uni-Stuff/CG/Adjacent/data/triangle/02/length_5"))
     # pprint.pprint(avg)
-    triangle_02_norms_boxplot()
+    triangle_02_boxplots()

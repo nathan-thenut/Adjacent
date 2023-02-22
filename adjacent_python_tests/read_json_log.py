@@ -2,7 +2,7 @@ from pathlib import Path
 from core_utils import (read_sketch_from_json_data, create_and_solve_sketch,
                         read_results, read_results_to_latex_table, Result)
 
-file = Path("/home/nathan/Downloads/Books/triangle-02/2023-02-22T1536--0.json")
+file = Path("/home/nathan/Downloads/Books/triangle-02/2023-02-22T2227--2.json")
 
 (points, lines, constraint_dict, move_dict) = read_sketch_from_json_data(file)
 

@@ -4,7 +4,7 @@ from core_utils import (PyConstraints, create_and_solve_sketch,
                         generate_vectors_with_length,
                         generate_vectors_with_distance)
 
-offset_pairs = generate_vectors_with_distance(1, count=2)
+offset_pairs = generate_vectors_with_distance(0.5, count=6)
 print(len(offset_pairs))
 for i in range(len(offset_pairs)):
     points = {}
