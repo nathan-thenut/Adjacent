@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from core_utils import read_results, Result
 
 
-def get_results_from_dir(path: Path) -> dict[str, dict]:
+def get_results_from_dir(path: Path) -> (dict[str, dict], dict[str, dict]):
     """gets all results from files in a dir"""
     overall_results = {}
 
@@ -23,25 +23,28 @@ def get_results_from_dir(path: Path) -> dict[str, dict]:
                 keyresults[result_key].append(results[key][result_key])
 
     # add average and standard variance
+    avg_results = {}
     for key in overall_results.keys():
         for result_key in [Result.L1.name, Result.L2.name]:
             value_list = overall_results[key][result_key]
             average = np.average(value_list)
             std_var = np.std(value_list)
-            if "avg" not in overall_results[key].keys():
-                overall_results[key]["avg"] = {}
-            if "std_var" not in overall_results[key].keys():
-                overall_results[key]["std_var"] = {}
-            overall_results[key]["avg"][result_key] = average
-            overall_results[key]["std_var"][result_key] = std_var
+            if key not in avg_results.keys():
+                avg_results[key] = {}
+            if "avg" not in avg_results[key].keys():
+                avg_results[key]["avg"] = {}
+            if "std_var" not in avg_results[key].keys():
+                avg_results[key]["std_var"] = {}
+            avg_results[key]["avg"][result_key] = average
+            avg_results[key]["std_var"][result_key] = std_var
 
-    return overall_results
+    return (overall_results, avg_results)
 
 
 def triangle_01_runtime_boxplot():
     """Creates a boxplot for triangle 01 time values."""
     path = Path("/home/nathan/Downloads/Books/triangle-01/")
-    results = get_results_from_dir(path)
+    results, avg = get_results_from_dir(path)
     # pprint.pprint(results)
 
     l1_time = results["time"]["L1"]
@@ -65,7 +68,7 @@ def triangle_01_runtime_boxplot():
 def triangle_01_norms_boxplot():
     """Creates a boxplot for triangle 01 norm values."""
     path = Path("/home/nathan/Downloads/Books/triangle-01/")
-    results = get_results_from_dir(path)
+    results, avg = get_results_from_dir(path)
     # pprint.pprint(results)
 
     l1_l1_norm = results["l1_norm"]["L1"]
@@ -88,4 +91,6 @@ def triangle_01_norms_boxplot():
 
 
 if __name__ == '__main__':
-    triangle_01_norms_boxplot()
+    results, avg = get_results_from_dir(
+        Path("/home/nathan/Downloads/Books/triangle-02/"))
+    pprint.pprint(avg)

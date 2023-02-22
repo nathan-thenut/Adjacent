@@ -26,6 +26,33 @@ class PyConstraints(str, Enum):
     MIDPOINT = "MIDPOINT"
 
 
+def generate_vectors_with_length(length: float,
+                                 count: int = 50) -> list[tuple[float]]:
+    """Generate pairs of vectors with the given length"""
+    x_values = np.random.default_rng().uniform(0.0, length, count)
+    pairs = []
+    for value in x_values:
+        y_value = length - value
+        x = np.random.choice([value, -value])
+        y = np.random.choice([y_value, -y_value])
+        pairs.append((x, y))
+
+    return pairs
+
+
+def generate_vectors_with_distance(distance: float,
+                                   count: int = 50) -> list[tuple[float]]:
+    """Generate pairs of vectors with the given distance"""
+    alpha = np.random.default_rng().uniform(0.0, 2 * np.pi, count)
+    pairs = []
+    for angle in alpha:
+        x = distance * np.cos(angle)
+        y = distance * np.sin(angle)
+        pairs.append((x, y))
+
+    return pairs
+
+
 def get_intersection(a1, a2, b1, b2):
     """
     Returns the point of intersection of the lines passing through a2,a1 and b2,b1.
@@ -580,7 +607,8 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
     file_path = write_data_to_json_file(path=json_path,
                                         data=json_data,
                                         counter=counter)
-    # plt.legend()
-    # plt.show()
+    if plot_data:
+        # plt.legend()
+        plt.show()
 
     return file_path
