@@ -549,7 +549,8 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
                 add_lines_to_plot(ax, lines, constraint_dict)
                 add_points_to_plot(ax, points)
                 add_circles_to_plot(ax, circles)
-                # add_annotations_for_angle_constraints(ax, lines, constraint_dict)
+                add_annotations_for_angle_constraints(ax, lines,
+                                                      constraint_dict)
                 subplot_int += 1
 
         s = Sketch()
@@ -591,7 +592,7 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
             add_lines_to_plot(ax2, lines, constraint_dict)
             add_points_to_plot(ax2, points)
             add_circles_to_plot(ax2, circles)
-            # add_annotations_for_angle_constraints(ax2, lines, constraint_dict)
+            add_annotations_for_angle_constraints(ax2, lines, constraint_dict)
             subplot_int += 1
 
         json_data = export_entities_to_dict(points=points,

@@ -120,7 +120,7 @@ def triangle_01_norms_boxplot():
 
 
 def triangle_02_boxplots():
-    """Creates a boxplot for triangle 02 norm values."""
+    """Creates boxplots for triangle 02."""
     main_path = Path("/home/nathan/Uni-Stuff/CG/Adjacent/data/triangle/02/")
     paths = [(main_path / "length_05"), (main_path / "length_1"),
              (main_path / "length_2"), (main_path / "length_3"),
@@ -128,6 +128,28 @@ def triangle_02_boxplots():
 
     # norm plot settings
     xticklabels = ['0.5', '1', '2', '3', '4', '5']
+    two_row_boxplot(paths,
+                    xticklabels,
+                    key="l1_norm",
+                    xlabel="Distance",
+                    ylabel='$l_1$ norm')
+
+    # two_row_boxplot(paths,
+    #                 xticklabels,
+    #                 key="time",
+    #                 xlabel="Distance",
+    #                 ylabel='Time (s)')
+
+
+def pnetagon_01_boxplots():
+    """Creates boxplots for pentagon 01."""
+    main_path = Path("/home/nathan/Uni-Stuff/CG/Adjacent/data/pentagon/01/")
+    paths = [(main_path / "angle_1"), (main_path / "angle_2"),
+             (main_path / "angle_3"), (main_path / "angle_4"),
+             (main_path / "angle_5")]
+
+    # norm plot settings
+    xticklabels = ['1', '2', '3', '4', '5']
     two_row_boxplot(paths,
                     xticklabels,
                     key="l1_norm",
