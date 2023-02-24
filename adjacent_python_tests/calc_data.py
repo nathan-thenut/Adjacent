@@ -141,7 +141,7 @@ def triangle_02_boxplots():
     #                 ylabel='Time (s)')
 
 
-def pnetagon_01_boxplots():
+def pentagon_01_boxplots():
     """Creates boxplots for pentagon 01."""
     main_path = Path("/home/nathan/Uni-Stuff/CG/Adjacent/data/pentagon/01/")
     paths = [(main_path / "angle_1"), (main_path / "angle_2"),

@@ -135,10 +135,9 @@ def add_points_to_plot(figure_or_ax,
             # figure_or_ax.annotate(key, (p_x, p_y, p_z), fontsize=12)
         else:
             figure_or_ax.plot(p_x, p_y, 'ko')
-            # figure_or_ax.annotate(key, (p_x, p_y),
-            #                       xytext=(p_x + 0.1, p_y + 0.1),
-            #                       textcoords='offset points',
-            #                       fontsize=12)
+            figure_or_ax.annotate(key.upper(), (p_x, p_y),
+                                  xytext=(p_x + 0.1, p_y - 0.25),
+                                  fontsize=12)
 
 
 def add_circles_to_plot(figure_or_ax, circles: dict[str, Circle]):
@@ -512,6 +511,7 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
     if plot_data:
         fig, axes = plt.subplots(1, 3, sharex='row', sharey='row')
         fig.canvas.draw()
+        fig.set_tight_layout(True)
     subplot_int = 0
     l1_time = 0.0
     l2_time = 0.0
@@ -612,5 +612,6 @@ def create_and_solve_sketch(lines_dict: dict[str, list[str]],
     if plot_data:
         # plt.legend()
         plt.show()
+        # print(fig.get_size_inches())
 
     return file_path
