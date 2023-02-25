@@ -14,11 +14,11 @@ lines["l3"] = ["p3", "p1"]
 A = 4
 
 constraint_dict = {}
-# constraint_dict["c1"] = {
-#     "type": PyConstraints.LENGTH,
-#     "entities": ["l1"],
-#     "value": A
-# }
+constraint_dict["c1"] = {
+    "type": PyConstraints.LENGTH,
+    "entities": ["l1"],
+    "value": A
+}
 
 # constraint_dict["c2"] = {
 #     "type": PyConstraints.LENGTH,
@@ -38,7 +38,7 @@ constraint_dict["c4"] = {
 }
 
 move_dict = {}
-move_dict["m1"] = {"point": "p2", "values": (5, 1)}
+move_dict["m1"] = {"point": "p1", "values": (2, 1)}
 
 create_and_solve_sketch(lines_dict=lines,
                         circle_dict={},

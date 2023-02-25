@@ -136,7 +136,7 @@ def add_points_to_plot(figure_or_ax,
         else:
             figure_or_ax.plot(p_x, p_y, 'ko')
             figure_or_ax.annotate(key.upper(), (p_x, p_y),
-                                  xytext=(p_x + 0.1, p_y - 0.25),
+                                  xytext=(p_x + 0.3, p_y - 0.3),
                                   fontsize=12)
 
 
@@ -199,7 +199,7 @@ def add_annotations_for_angle_constraints(figure_or_ax, lines: dict[str, Line],
                             line2_coords[0][:2],
                             line1_coords[0][:2],
                             ax=figure_or_ax,
-                            size=40,
+                            size=75,
                             color="red",
                             text=f"{value}°",
                             textposition="edge",
