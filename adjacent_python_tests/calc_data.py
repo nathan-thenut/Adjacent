@@ -4,6 +4,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from core_utils import read_results, Result
 
+FIGURE_PATH = "/home/nathan/Uni-Stuff/CG/Abschlussarbeit/latex/figures/pgf/dataplots/"
+
+SIZE = (9.53, 4.64)
+
 
 def get_results_from_dir(path: Path) -> (dict[str, dict], dict[str, dict]):
     """gets all results from files in a dir"""
@@ -46,14 +50,16 @@ def two_boxplots(paths: list[Path],
                  key: str,
                  xlabel: str,
                  ylabel: str,
+                 filename: str,
                  two_row: bool = True):
     """Creates a two row boxplot."""
     if two_row:
-        fig, axes = plt.subplots(2, 1)
+        fig, axes = plt.subplots(2, 1, sharex=True)
     else:
-        fig, axes = plt.subplots(1, 2)
+        fig, axes = plt.subplots(1, 2, sharey=True)
 
     fig.set_tight_layout(True)
+    fig.set_size_inches(SIZE, forward=True)
     l1_plots = []
     l2_plots = []
     for path in paths:
@@ -64,41 +70,125 @@ def two_boxplots(paths: list[Path],
     l1_ax = axes[0]
     l2_ax = axes[1]
     l1_ax.boxplot(l1_plots)
+    l1_ax.set_yscale('log')
     l1_ax.set_title('L1')
-    if xticklabels:
+    if xticklabels and not two_row:
         l1_ax.set_xticklabels(xticklabels)
-    l1_ax.set_xlabel(xlabel)
+    # l1_ax.set_xlabel(xlabel)
     l1_ax.set_ylabel(ylabel)
 
     l2_ax.boxplot(l2_plots)
+    l2_ax.set_yscale('log')
     l2_ax.set_title('L2')
-    if xticklabels:
-        l2_ax.set_xticklabels(xticklabels)
+    # if xticklabels:
+    #     l2_ax.set_xticklabels(xticklabels)
     l2_ax.set_xlabel(xlabel)
-    l2_ax.set_ylabel(ylabel)
-
+    if two_row:
+        l2_ax.set_ylabel(ylabel)
+        if xticklabels:
+            l2_ax.set_xticks(range(1, len(xticklabels) + 1))
+            l2_ax.set_xticklabels(xticklabels)
+    plt.savefig(filename, format="pgf")
     plt.show()
 
 
 def single_boxplot(paths: list[Path], xticklabels: list[str], key: str,
-                   result_key: str, xlabel: str, ylabel: str, title: str):
+                   result_key: str, xlabel: str, ylabel: str, title: str,
+                   filename: str):
     """Creates a single boxplot."""
 
     fig = plt.figure()
     ax = fig.add_subplot()
     fig.set_tight_layout(True)
+    fig.set_size_inches(SIZE, forward=True)
     plots = []
     for path in paths:
         results, avg = get_results_from_dir(path)
         plots.append(results[key][result_key])
 
     ax.boxplot(plots)
+    ax.set_yscale('log')
     ax.set_title(title)
     if xticklabels:
         ax.set_xticklabels(xticklabels)
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
 
+    plt.savefig(filename, format="pgf")
+    plt.show()
+
+
+def two_row_barplot(path: Path,
+                    key: str,
+                    xlabel: str,
+                    ylabel: str,
+                    filename: str,
+                    is_printing: bool = False):
+    """Create a two-row barplot."""
+    results, avg = get_results_from_dir(path)
+
+    l1_data = results[key]["L1"]
+    l2_data = results[key]["L2"]
+    l1_bins, l1_counts = np.unique(l1_data, return_counts=True)
+    l2_bins, l2_counts = np.unique(l2_data, return_counts=True)
+    if is_printing:
+        l1_str = f"L1 & {np.average(l1_data)} & {l1_bins[l1_counts.argmax()]} & {np.median(l1_data)}\\\\"
+        l2_str = f"L2 & {np.average(l2_data)} & {l2_bins[l2_counts.argmax()]} & {np.median(l2_data)}\\\\"
+        print(l1_str)
+        print(l2_str)
+
+    fig, axes = plt.subplots(2, 1, sharey=True, sharex=True, tight_layout=True)
+    fig.set_tight_layout(True)
+    fig.set_size_inches(SIZE, forward=True)
+
+    bins = list(l1_bins) + list(l2_bins)
+    xticks = list(range(min(bins), max(bins) + 1))
+    axes[0].bar(*(l1_bins, l1_counts))
+    axes[0].set_title("L1")
+    axes[0].set_ylabel(ylabel)
+    axes[0].set_xticks(xticks)
+    axes[1].bar(*(l2_bins, l2_counts))
+    axes[1].set_title("L2")
+    axes[1].set_xlabel(xlabel)
+    axes[1].set_ylabel(ylabel)
+    axes[1].set_xticks(xticks)
+
+
+def three_by_two_barplot(paths: list[Path], titles: list[str], key: str,
+                         result_key: str, xlabel: str, ylabel: str,
+                         filename: str):
+    """Three rows and two column barplots"""
+    fig, axes = plt.subplots(3, 2, sharey=True, sharex=True, tight_layout=True)
+    fig.set_size_inches((9.53, 2 * 4.64), forward=True)
+    bins_list = []
+    counts_list = []
+    for path in paths:
+        results, avg = get_results_from_dir(path)
+
+        data = results[key][result_key]
+        bins, counts = np.unique(data, return_counts=True)
+        bins_list.append(bins)
+        counts_list.append(counts)
+
+    bins = np.concatenate(bins_list).ravel().tolist()
+    xticks = list(range(min(bins + [0]), max(bins) + 1))
+    i = 0
+    for row in axes:
+        for ax in row:
+            if i < len(titles):
+                ax.bar(*(bins_list[i], counts_list[i]))
+                ax.set_title(titles[i])
+                if i % 2 == 0:
+                    ax.set_ylabel(ylabel)
+                if i == 4 or i == 5 or (i == 3 and len(titles) == 5):
+                    ax.set_xlabel(xlabel)
+                    # ax.sharex(axes[-1][-1])
+                ax.set_xticks(xticks)
+                i = i + 1
+            else:
+                ax.axis('off')
+
+    plt.savefig(filename, format="pgf")
     plt.show()
 
 
@@ -107,11 +197,13 @@ def triangle_01_runtime_boxplot():
     path = Path("/home/nathan/Uni-Stuff/CG/Adjacent/data/triangle/01")
     results, avg = get_results_from_dir(path)
     # pprint.pprint(results)
+    filename = FIGURE_PATH + "triangle_01_timing_boxplot.pgf"
     two_boxplots([path], [],
                  key="time",
                  xlabel="",
                  ylabel='Time (s)',
-                 two_row=False)
+                 two_row=False,
+                 filename=filename)
 
 
 def triangle_01_norms_boxplot():
@@ -139,29 +231,25 @@ def triangle_01_norms_boxplot():
     plt.show()
 
 
-def triangle_01_hist():
-    """Histograms for triangle 01 data"""
+def triangle_01_barplots():
+    """Barplot for triangle 01 data"""
     path = Path("/home/nathan/Uni-Stuff/CG/Adjacent/data/triangle/01")
-    results, avg = get_results_from_dir(path)
 
-    l1_steps = results["steps"]["L1"]
-    l2_steps = results["steps"]["L2"]
+    # filename = FIGURE_PATH + "triangle_01_steps_barplot.pgf"
+    # two_row_barplot(path,
+    #                 key="steps",
+    #                 xlabel="Newton-Steps",
+    #                 ylabel="Frequency",
+    #                 filename=filename,
+    #                 is_printing=True)
 
-    fig, axes = plt.subplots(2, 1, sharey=True, sharex=True, tight_layout=True)
-    n_bins = 10
-    l1_counts, l1_bins = np.histogram(l1_steps)
-    print(l1_counts)
-    print(l1_bins)
-    axes[0].stairs(l1_counts, l1_bins)
-    axes[0].set_title("L1")
-    axes[0].set_xlabel("Steps")
-    axes[0].set_ylabel("Frequency")
-    l2_counts, l2_bins = np.histogram(l2_steps)
-    axes[1].stairs(l2_counts, l2_bins)
-    axes[1].set_title("L2")
-    axes[1].set_xlabel("Steps")
-    axes[1].set_ylabel("Frequency")
-    plt.show()
+    filename = FIGURE_PATH + "triangle_01_sparsity_barplot.pgf"
+    two_row_barplot(path,
+                    key="non_zero_results",
+                    xlabel="Non-zero results (Sparsity)",
+                    ylabel="Frequency",
+                    filename=filename,
+                    is_printing=True)
 
 
 def triangle_02_boxplots():
@@ -173,11 +261,13 @@ def triangle_02_boxplots():
 
     # norm plot settings
     xticklabels = ['0.5', '1', '2', '3', '4', '5']
-    # two_boxplots(paths,
-    #              xticklabels,
-    #              key="l2_norm",
-    #              xlabel="Distance",
-    #              ylabel='$l_2$ norm of offset')
+    filename = FIGURE_PATH + "triangle_02_l2_norm_boxplot.pgf"
+    two_boxplots(paths,
+                 xticklabels,
+                 key="l2_norm",
+                 xlabel="Distance traveled by moved point in length units",
+                 ylabel='$l_2$ norm of offset',
+                 filename=filename)
 
     # two_boxplots(paths,
     #              xticklabels,
@@ -185,13 +275,54 @@ def triangle_02_boxplots():
     #              xlabel="Distance",
     #              ylabel='Time (s)')
 
-    single_boxplot(paths,
-                   xticklabels,
-                   key="time",
-                   result_key="L1",
-                   xlabel="Distance",
-                   ylabel='Time (s)',
-                   title='L1 runtime over distance')
+    # filename = FIGURE_PATH + "triangle_02_l2_time_boxplot.pgf"
+    # single_boxplot(paths,
+    #                xticklabels,
+    #                key="time",
+    #                result_key="L2",
+    #                xlabel="Distance traveled by moved point in length units",
+    #                ylabel='Time (s)',
+    #                title='L1 runtime',
+    #                filename=filename)
+
+
+def triangle_02_barplots():
+    """Create triangle 02 barplots."""
+    main_path = Path("/home/nathan/Uni-Stuff/CG/Adjacent/data/triangle/02/")
+    paths = [(main_path / "length_05"), (main_path / "length_1"),
+             (main_path / "length_2"), (main_path / "length_3"),
+             (main_path / "length_4"), (main_path / "length_5")]
+
+    # counter = 1
+    # for path in paths:
+    #     filename = FIGURE_PATH + f"triangle_02_sparsity_barplot-{counter}.pgf"
+    #     two_row_barplot(path,
+    #                     key="non_zero_results",
+    #                     xlabel="Non-zero results (Sparsity)",
+    #                     ylabel="Frequency",
+    #                     filename=filename)
+    #     counter = counter + 1
+
+    filename = FIGURE_PATH + "triangle_02_l2_sparsity_barplot.pgf"
+    titles = ["0.5", "1", "2", "3", "4", "5"]
+    for i in range(len(titles)):
+        titles[i] = "Distance of " + titles[i]
+    three_by_two_barplot(paths,
+                         titles=titles,
+                         key="non_zero_results",
+                         result_key="L2",
+                         xlabel="Non-zero results (Sparsity)",
+                         ylabel="Frequency",
+                         filename=filename)
+
+    # filename = FIGURE_PATH + "triangle_02_l1_steps_barplot.pgf"
+    # three_by_two_barplot(paths,
+    #                      titles=titles,
+    #                      key="steps",
+    #                      result_key="L1",
+    #                      xlabel="Newton-Steps",
+    #                      ylabel="Frequency",
+    #                      filename=filename)
 
 
 def pentagon_01_boxplots():
@@ -203,17 +334,60 @@ def pentagon_01_boxplots():
 
     # norm plot settings
     xticklabels = ['1', '2', '3', '4', '5']
-    two_boxplots(paths,
-                 xticklabels,
-                 key="l1_norm",
-                 xlabel="Distance",
-                 ylabel='$l_1$ norm')
+    # filename = FIGURE_PATH + "pentagon_01_l2_norm_boxplot.pgf"
+    # two_boxplots(paths,
+    #              xticklabels,
+    #              key="l2_norm",
+    #              xlabel="Number of angle constraints",
+    #              ylabel='$l_2$ norm',
+    #              filename=filename)
 
-    # two_row_boxplot(paths,
-    #                 xticklabels,
-    #                 key="time",
-    #                 xlabel="Distance",
-    #                 ylabel='Time (s)')
+    filename = FIGURE_PATH + "pentagon_01_l2_time_boxplot.pgf"
+    # two_boxplots(paths,
+    #              xticklabels,
+    #              key="time",
+    #              xlabel="Number of angle constraints",
+    #              ylabel='Time (s)',
+    #              filename=filename)
+
+    single_boxplot(paths,
+                   xticklabels,
+                   key="time",
+                   result_key="L2",
+                   xlabel="Number of angle constraints",
+                   ylabel='Time (s)',
+                   title='L2 runtime',
+                   filename=filename)
+
+
+def pentagon_01_barplots():
+    """Creates barplots for pentagon 01."""
+    main_path = Path("/home/nathan/Uni-Stuff/CG/Adjacent/data/pentagon/01/")
+    paths = [(main_path / "angle_1"), (main_path / "angle_2"),
+             (main_path / "angle_3"), (main_path / "angle_4"),
+             (main_path / "angle_5")]
+
+    titles = ['1', '2', '3', '4', '5']
+    for i in range(len(titles)):
+        titles[i] = titles[i] + " angle constraint(s)"
+
+    # filename = FIGURE_PATH + "pentagon_01_l2_sparsity_barplot.pgf"
+    # three_by_two_barplot(paths,
+    #                      titles=titles,
+    #                      key="non_zero_results",
+    #                      result_key="L2",
+    #                      xlabel="Non-zero results (Sparsity)",
+    #                      ylabel="Frequency",
+    #                      filename=filename)
+
+    filename = FIGURE_PATH + "pentagon_01_l2_steps_barplot.pgf"
+    three_by_two_barplot(paths,
+                         titles=titles,
+                         key="steps",
+                         result_key="L2",
+                         xlabel="Newton-Steps",
+                         ylabel="Frequency",
+                         filename=filename)
 
 
 if __name__ == '__main__':
@@ -221,4 +395,8 @@ if __name__ == '__main__':
     #     Path("/home/nathan/Uni-Stuff/CG/Adjacent/data/triangle/02/length_5"))
     # pprint.pprint(avg)
     # triangle_01_runtime_boxplot()
-    triangle_02_boxplots()
+    # triangle_01_barplots()
+    # triangle_02_boxplots()
+    triangle_02_barplots()
+    # pentagon_01_boxplots()
+    # pentagon_01_barplots()
