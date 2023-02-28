@@ -3,7 +3,7 @@ from pathlib import Path
 from core_utils import (PyConstraints, create_and_solve_sketch,
                         generate_vectors_with_distance)
 
-offset_pairs = generate_vectors_with_distance(1, count=1000)
+offset_pairs = generate_vectors_with_distance(3, count=1000)
 for i in range(len(offset_pairs)):
     points = {}
     points["p1"] = (0, 1)
