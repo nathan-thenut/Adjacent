@@ -45,6 +45,17 @@ def get_results_from_dir(path: Path) -> (dict[str, dict], dict[str, dict]):
     return (overall_results, avg_results)
 
 
+def find_not_converged_results(path: Path):
+    """Find results where adjacent didn't converge."""
+    for file in list(path.glob("*.json")):
+        results = read_results(file)
+        # if 0 in results["l1_norm"].values():
+        #     print(file)
+
+        if 22 in results["steps"].values():
+            print(file)
+
+
 def two_boxplots(paths: list[Path],
                  xticklabels: list[str],
                  key: str,
@@ -153,6 +164,9 @@ def two_row_barplot(path: Path,
     axes[1].set_ylabel(ylabel)
     axes[1].set_xticks(xticks)
 
+    plt.savefig(filename, format="pgf")
+    plt.show()
+
 
 def three_by_two_barplot(paths: list[Path], titles: list[str], key: str,
                          result_key: str, xlabel: str, ylabel: str,
@@ -208,6 +222,7 @@ def triangle_01_runtime_boxplot():
 
 def triangle_01_norms_boxplot():
     """Creates a boxplot for triangle 01 norm values."""
+    filename = FIGURE_PATH + "triangle_01_norms_boxplot.pgf"
     path = Path("/home/nathan/Uni-Stuff/CG/Adjacent/data/triangle/01")
     results, avg = get_results_from_dir(path)
     # pprint.pprint(results)
@@ -219,6 +234,8 @@ def triangle_01_norms_boxplot():
     l2_l2_norm = results["l2_norm"]["L2"]
 
     fig = plt.figure()
+    fig.set_tight_layout(True)
+    fig.set_size_inches(SIZE, forward=True)
     ax = fig.add_subplot(121)
     bp = ax.boxplot([l1_l1_norm, l2_l1_norm])
     ax.set_title('$l_1$ norm of offset')
@@ -228,12 +245,14 @@ def triangle_01_norms_boxplot():
     ax.set_title('$l_2$ norm of offset')
     ax.set_xticklabels(['L1', 'L2'])
 
+    plt.savefig(filename, format="pgf")
     plt.show()
 
 
 def triangle_01_barplots():
     """Barplot for triangle 01 data"""
     path = Path("/home/nathan/Uni-Stuff/CG/Adjacent/data/triangle/01")
+    find_not_converged_results(path)
 
     # filename = FIGURE_PATH + "triangle_01_steps_barplot.pgf"
     # two_row_barplot(path,
@@ -243,13 +262,13 @@ def triangle_01_barplots():
     #                 filename=filename,
     #                 is_printing=True)
 
-    filename = FIGURE_PATH + "triangle_01_sparsity_barplot.pgf"
-    two_row_barplot(path,
-                    key="non_zero_results",
-                    xlabel="Non-zero results (Sparsity)",
-                    ylabel="Frequency",
-                    filename=filename,
-                    is_printing=True)
+    # filename = FIGURE_PATH + "triangle_01_sparsity_barplot.pgf"
+    # two_row_barplot(path,
+    #                 key="non_zero_results",
+    #                 xlabel="Non-zero results (Sparsity)",
+    #                 ylabel="Frequency",
+    #                 filename=filename,
+    #                 is_printing=True)
 
 
 def triangle_02_boxplots():
@@ -395,8 +414,9 @@ if __name__ == '__main__':
     #     Path("/home/nathan/Uni-Stuff/CG/Adjacent/data/triangle/02/length_5"))
     # pprint.pprint(avg)
     # triangle_01_runtime_boxplot()
-    # triangle_01_barplots()
+    # triangle_01_norms_boxplot()
+    triangle_01_barplots()
     # triangle_02_boxplots()
-    triangle_02_barplots()
+    # triangle_02_barplots()
     # pentagon_01_boxplots()
     # pentagon_01_barplots()

@@ -3,7 +3,7 @@ from pathlib import Path
 from core_utils import (PyConstraints, create_and_solve_sketch,
                         generate_vectors_with_distance)
 
-offset_pairs = generate_vectors_with_distance(0.5, count=100)
+offset_pairs = generate_vectors_with_distance(1, count=4)
 for i in range(len(offset_pairs)):
     points = {}
     points["p1"] = (0, 1)
@@ -18,11 +18,11 @@ for i in range(len(offset_pairs)):
     A = 4
 
     constraint_dict = {}
-    constraint_dict["c1"] = {
-        "type": PyConstraints.LENGTH,
-        "entities": ["l1"],
-        "value": A
-    }
+    # constraint_dict["c1"] = {
+    #     "type": PyConstraints.LENGTH,
+    #     "entities": ["l1"],
+    #     "value": A
+    # }
 
     # constraint_dict["c2"] = {
     #     "type": PyConstraints.LENGTH,
@@ -48,11 +48,10 @@ for i in range(len(offset_pairs)):
     move_dict = {}
     move_dict["m1"] = {"point": selected_point, "values": new_values}
 
-    create_and_solve_sketch(
-        lines_dict=lines,
-        circle_dict={},
-        points_dict=points,
-        constraint_dict=constraint_dict,
-        move_dict=move_dict,
-        json_path=Path("/home/nathan/Downloads/Books/triangle-02/"),
-        counter=i)
+    create_and_solve_sketch(lines_dict=lines,
+                            circle_dict={},
+                            points_dict=points,
+                            constraint_dict=constraint_dict,
+                            move_dict=move_dict,
+                            json_path=Path("/home/nathan/Downloads/Books/"),
+                            counter=i)
