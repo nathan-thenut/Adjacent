@@ -45,15 +45,22 @@ def get_results_from_dir(path: Path) -> (dict[str, dict], dict[str, dict]):
     return (overall_results, avg_results)
 
 
-def find_not_converged_results(path: Path):
+def find_not_converged_results(path: Path, remove_files: bool = False):
     """Find results where adjacent didn't converge."""
+    not_converged = []
     for file in list(path.glob("*.json")):
         results = read_results(file)
         # if 0 in results["l1_norm"].values():
         #     print(file)
-
         if 22 in results["steps"].values():
             print(file)
+            not_converged.append(file)
+
+    print(f"Found {len(not_converged)} not converged results.")
+    if remove_files:
+        print("Removing not converged results")
+        for file in not_converged:
+            file.unlink()
 
 
 def two_boxplots(paths: list[Path],
@@ -413,9 +420,10 @@ if __name__ == '__main__':
     # results, avg = get_results_from_dir(
     #     Path("/home/nathan/Uni-Stuff/CG/Adjacent/data/triangle/02/length_5"))
     # pprint.pprint(avg)
+    find_not_converged_results(Path("/home/nathan/Downloads/Books/"), True)
     # triangle_01_runtime_boxplot()
     # triangle_01_norms_boxplot()
-    triangle_01_barplots()
+    # triangle_01_barplots()
     # triangle_02_boxplots()
     # triangle_02_barplots()
     # pentagon_01_boxplots()
