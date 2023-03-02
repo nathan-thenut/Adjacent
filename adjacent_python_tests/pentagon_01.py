@@ -1,12 +1,11 @@
 import random
-import time
 import gc
 from pathlib import Path
 import numpy as np
 from core_utils import (PyConstraints, create_and_solve_sketch,
                         generate_vectors_with_distance)
 
-offset_pairs = generate_vectors_with_distance(1, count=25)
+offset_pairs = generate_vectors_with_distance(1, count=100)
 for i, pair in enumerate(offset_pairs):
     points = {}
     points["p1"] = (0.6156184929834163, 0.08539832151226268)
@@ -45,23 +44,23 @@ for i, pair in enumerate(offset_pairs):
         "value": -ANGLE
     }
 
-    constraint_dict["c3"] = {
-        "type": PyConstraints.ANGLE,
-        "entities": ["l3", "l4"],
-        "value": -ANGLE
-    }
+    # constraint_dict["c3"] = {
+    #     "type": PyConstraints.ANGLE,
+    #     "entities": ["l3", "l4"],
+    #     "value": -ANGLE
+    # }
 
-    constraint_dict["c4"] = {
-        "type": PyConstraints.ANGLE,
-        "entities": ["l4", "l5"],
-        "value": -ANGLE
-    }
+    # constraint_dict["c4"] = {
+    #     "type": PyConstraints.ANGLE,
+    #     "entities": ["l4", "l5"],
+    #     "value": -ANGLE
+    # }
 
-    constraint_dict["c5"] = {
-        "type": PyConstraints.ANGLE,
-        "entities": ["l5", "l1"],
-        "value": -ANGLE
-    }
+    # constraint_dict["c5"] = {
+    #     "type": PyConstraints.ANGLE,
+    #     "entities": ["l5", "l1"],
+    #     "value": -ANGLE
+    # }
 
     # constraint_dict["c6"] = {"type": PyConstraints.EQUAL, "entities": ["l6", "l7"]}
     #
@@ -75,7 +74,7 @@ for i, pair in enumerate(offset_pairs):
     # }
     #
 
-    selected_point = random.choice(list(points.keys())[:6])
+    selected_point = random.choice(list(points.keys())[:4])
     selected_values = points[selected_point]
     xoffset = pair[0]
     yoffset = pair[1]
@@ -92,4 +91,3 @@ for i, pair in enumerate(offset_pairs):
                             json_path=Path("/home/nathan/Downloads/Books"),
                             counter=i)
     gc.collect()
-    # time.sleep(0.5)
