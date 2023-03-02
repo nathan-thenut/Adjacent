@@ -287,13 +287,13 @@ def triangle_02_boxplots():
 
     # norm plot settings
     xticklabels = ['0.5', '1', '2', '3', '4', '5']
-    filename = FIGURE_PATH + "triangle_02_l2_norm_boxplot.pgf"
-    two_boxplots(paths,
-                 xticklabels,
-                 key="l2_norm",
-                 xlabel="Distance traveled by moved point in length units",
-                 ylabel='$l_2$ norm of offset',
-                 filename=filename)
+    # filename = FIGURE_PATH + "triangle_02_l1_norm_boxplot.pgf"
+    # two_boxplots(paths,
+    #              xticklabels,
+    #              key="l1_norm",
+    #              xlabel="Distance traveled by moved point in length units",
+    #              ylabel='$l_1$ norm of offset',
+    #              filename=filename)
 
     # two_boxplots(paths,
     #              xticklabels,
@@ -301,15 +301,15 @@ def triangle_02_boxplots():
     #              xlabel="Distance",
     #              ylabel='Time (s)')
 
-    # filename = FIGURE_PATH + "triangle_02_l2_time_boxplot.pgf"
-    # single_boxplot(paths,
-    #                xticklabels,
-    #                key="time",
-    #                result_key="L2",
-    #                xlabel="Distance traveled by moved point in length units",
-    #                ylabel='Time (s)',
-    #                title='L1 runtime',
-    #                filename=filename)
+    filename = FIGURE_PATH + "triangle_02_l1_time_boxplot.pgf"
+    single_boxplot(paths,
+                   xticklabels,
+                   key="time",
+                   result_key="L1",
+                   xlabel="Distance traveled by moved point in length units",
+                   ylabel='Time (s)',
+                   title='L1 runtime',
+                   filename=filename)
 
 
 def triangle_02_barplots():
@@ -329,26 +329,26 @@ def triangle_02_barplots():
     #                     filename=filename)
     #     counter = counter + 1
 
-    filename = FIGURE_PATH + "triangle_02_l2_sparsity_barplot.pgf"
+    # filename = FIGURE_PATH + "triangle_02_l2_sparsity_barplot.pgf"
     titles = ["0.5", "1", "2", "3", "4", "5"]
     for i in range(len(titles)):
         titles[i] = "Distance of " + titles[i]
-    three_by_two_barplot(paths,
-                         titles=titles,
-                         key="non_zero_results",
-                         result_key="L2",
-                         xlabel="Non-zero results (Sparsity)",
-                         ylabel="Frequency",
-                         filename=filename)
-
-    # filename = FIGURE_PATH + "triangle_02_l1_steps_barplot.pgf"
     # three_by_two_barplot(paths,
     #                      titles=titles,
-    #                      key="steps",
-    #                      result_key="L1",
-    #                      xlabel="Newton-Steps",
+    #                      key="non_zero_results",
+    #                      result_key="L2",
+    #                      xlabel="Non-zero results (Sparsity)",
     #                      ylabel="Frequency",
     #                      filename=filename)
+
+    filename = FIGURE_PATH + "triangle_02_l2_steps_barplot.pgf"
+    three_by_two_barplot(paths,
+                         titles=titles,
+                         key="steps",
+                         result_key="L2",
+                         xlabel="Newton-Steps",
+                         ylabel="Frequency",
+                         filename=filename)
 
 
 def pentagon_01_boxplots():
