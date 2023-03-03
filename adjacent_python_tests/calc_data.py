@@ -199,6 +199,10 @@ def three_by_two_barplot(paths: list[Path], titles: list[str], key: str,
             if i < len(titles):
                 ax.bar(*(bins_list[i], counts_list[i]))
                 ax.set_title(titles[i])
+                # ax.set_xlim(0.0, 7.74)
+                # ax.set_xlim(0.0, 10.74)
+                # ax.set_xlim(0.0, 21.30)
+                # ax.set_xlim(0.0, 4.54)
                 if i % 2 == 0:
                     ax.set_ylabel(ylabel)
                 if i == 4 or i == 5 or (i == 3 and len(titles) == 5):
@@ -360,15 +364,15 @@ def pentagon_01_boxplots():
 
     # norm plot settings
     xticklabels = ['1', '2', '3', '4', '5']
-    # filename = FIGURE_PATH + "pentagon_01_l2_norm_boxplot.pgf"
+    # filename = FIGURE_PATH + "pentagon_01_l1_norm_boxplot.pgf"
     # two_boxplots(paths,
     #              xticklabels,
-    #              key="l2_norm",
+    #              key="l1_norm",
     #              xlabel="Number of angle constraints",
-    #              ylabel='$l_2$ norm',
+    #              ylabel='$l_1$ norm',
     #              filename=filename)
 
-    filename = FIGURE_PATH + "pentagon_01_l2_time_boxplot.pgf"
+    filename = FIGURE_PATH + "pentagon_01_l1_time_boxplot.pgf"
     # two_boxplots(paths,
     #              xticklabels,
     #              key="time",
@@ -379,10 +383,10 @@ def pentagon_01_boxplots():
     single_boxplot(paths,
                    xticklabels,
                    key="time",
-                   result_key="L2",
+                   result_key="L1",
                    xlabel="Number of angle constraints",
                    ylabel='Time (s)',
-                   title='L2 runtime',
+                   title='L1 runtime',
                    filename=filename)
 
 
@@ -420,11 +424,11 @@ if __name__ == '__main__':
     # results, avg = get_results_from_dir(
     #     Path("/home/nathan/Uni-Stuff/CG/Adjacent/data/triangle/02/length_5"))
     # pprint.pprint(avg)
-    find_not_converged_results(Path("/home/nathan/Downloads/Books/"), True)
+    # find_not_converged_results(Path("/home/nathan/Downloads/Books/"), True)
     # triangle_01_runtime_boxplot()
     # triangle_01_norms_boxplot()
     # triangle_01_barplots()
     # triangle_02_boxplots()
     # triangle_02_barplots()
-    # pentagon_01_boxplots()
+    pentagon_01_boxplots()
     # pentagon_01_barplots()
