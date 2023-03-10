@@ -87,7 +87,7 @@ def two_boxplots(paths: list[Path],
 
     l1_ax = axes[0]
     l2_ax = axes[1]
-    l1_ax.boxplot(l1_plots)
+    l1_ax.boxplot(l1_plots, whis=(0, 100))
     l1_ax.set_yscale('log')
     l1_ax.set_title('L1')
     if xticklabels and not two_row:
@@ -95,7 +95,7 @@ def two_boxplots(paths: list[Path],
     # l1_ax.set_xlabel(xlabel)
     l1_ax.set_ylabel(ylabel)
 
-    l2_ax.boxplot(l2_plots)
+    l2_ax.boxplot(l2_plots, whis=(0, 100))
     l2_ax.set_yscale('log')
     l2_ax.set_title('L2')
     # if xticklabels:
@@ -124,7 +124,7 @@ def single_boxplot(paths: list[Path], xticklabels: list[str], key: str,
         results, avg = get_results_from_dir(path)
         plots.append(results[key][result_key])
 
-    ax.boxplot(plots)
+    ax.boxplot(plots, whis=(0, 100))
     ax.set_yscale('log')
     ax.set_title(title)
     if xticklabels:
@@ -291,13 +291,13 @@ def triangle_02_boxplots():
 
     # norm plot settings
     xticklabels = ['0.5', '1', '2', '3', '4', '5']
-    # filename = FIGURE_PATH + "triangle_02_l1_norm_boxplot.pgf"
-    # two_boxplots(paths,
-    #              xticklabels,
-    #              key="l1_norm",
-    #              xlabel="Distance traveled by moved point in length units",
-    #              ylabel='$l_1$ norm of offset',
-    #              filename=filename)
+    filename = FIGURE_PATH + "triangle_02_l2_norm_boxplot.pgf"
+    two_boxplots(paths,
+                 xticklabels,
+                 key="l2_norm",
+                 xlabel="Distance traveled by moved point in length units",
+                 ylabel='$l_2$ norm of offset',
+                 filename=filename)
 
     # two_boxplots(paths,
     #              xticklabels,
@@ -305,15 +305,15 @@ def triangle_02_boxplots():
     #              xlabel="Distance",
     #              ylabel='Time (s)')
 
-    filename = FIGURE_PATH + "triangle_02_l1_time_boxplot.pgf"
-    single_boxplot(paths,
-                   xticklabels,
-                   key="time",
-                   result_key="L1",
-                   xlabel="Distance traveled by moved point in length units",
-                   ylabel='Time (s)',
-                   title='L1 runtime',
-                   filename=filename)
+    # filename = FIGURE_PATH + "triangle_02_l2_time_boxplot.pgf"
+    # single_boxplot(paths,
+    #                xticklabels,
+    #                key="time",
+    #                result_key="L2",
+    #                xlabel="Distance traveled by moved point in length units",
+    #                ylabel='Time (s)',
+    #                title='L2 runtime',
+    #                filename=filename)
 
 
 def triangle_02_barplots():
@@ -364,15 +364,15 @@ def pentagon_01_boxplots():
 
     # norm plot settings
     xticklabels = ['1', '2', '3', '4', '5']
-    # filename = FIGURE_PATH + "pentagon_01_l1_norm_boxplot.pgf"
-    # two_boxplots(paths,
-    #              xticklabels,
-    #              key="l1_norm",
-    #              xlabel="Number of angle constraints",
-    #              ylabel='$l_1$ norm',
-    #              filename=filename)
+    filename = FIGURE_PATH + "pentagon_01_l2_norm_boxplot.pgf"
+    two_boxplots(paths,
+                 xticklabels,
+                 key="l2_norm",
+                 xlabel="Number of angle constraints",
+                 ylabel='$l_2$ norm',
+                 filename=filename)
 
-    filename = FIGURE_PATH + "pentagon_01_l1_time_boxplot.pgf"
+    # filename = FIGURE_PATH + "pentagon_01_l2_time_boxplot.pgf"
     # two_boxplots(paths,
     #              xticklabels,
     #              key="time",
@@ -380,14 +380,14 @@ def pentagon_01_boxplots():
     #              ylabel='Time (s)',
     #              filename=filename)
 
-    single_boxplot(paths,
-                   xticklabels,
-                   key="time",
-                   result_key="L1",
-                   xlabel="Number of angle constraints",
-                   ylabel='Time (s)',
-                   title='L1 runtime',
-                   filename=filename)
+    # single_boxplot(paths,
+    #                xticklabels,
+    #                key="time",
+    #                result_key="L2",
+    #                xlabel="Number of angle constraints",
+    #                ylabel='Time (s)',
+    #                title='L2 runtime',
+    #                filename=filename)
 
 
 def pentagon_01_barplots():
