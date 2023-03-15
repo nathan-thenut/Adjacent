@@ -424,11 +424,11 @@ if __name__ == '__main__':
     # results, avg = get_results_from_dir(
     #     Path("/home/nathan/Uni-Stuff/CG/Adjacent/data/triangle/02/length_5"))
     # pprint.pprint(avg)
-    # find_not_converged_results(Path("/home/nathan/Downloads/Books/"), True)
+    find_not_converged_results(Path("/home/nathan/Downloads/Books/"), True)
     # triangle_01_runtime_boxplot()
     # triangle_01_norms_boxplot()
     # triangle_01_barplots()
     # triangle_02_boxplots()
     # triangle_02_barplots()
-    pentagon_01_boxplots()
+    # pentagon_01_boxplots()
     # pentagon_01_barplots()
