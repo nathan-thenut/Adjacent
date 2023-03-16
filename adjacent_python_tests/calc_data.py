@@ -291,13 +291,13 @@ def triangle_02_boxplots():
 
     # norm plot settings
     xticklabels = ['0.5', '1', '2', '3', '4', '5']
-    filename = FIGURE_PATH + "triangle_02_l2_norm_boxplot.pgf"
-    two_boxplots(paths,
-                 xticklabels,
-                 key="l2_norm",
-                 xlabel="Distance traveled by moved point in length units",
-                 ylabel='$l_2$ norm of offset',
-                 filename=filename)
+    # filename = FIGURE_PATH + "triangle_02_l2_norm_boxplot.pgf"
+    # two_boxplots(paths,
+    #              xticklabels,
+    #              key="l2_norm",
+    #              xlabel="Distance traveled by moved point in length units",
+    #              ylabel='$l_2$ norm of offset',
+    #              filename=filename)
 
     # two_boxplots(paths,
     #              xticklabels,
@@ -305,15 +305,15 @@ def triangle_02_boxplots():
     #              xlabel="Distance",
     #              ylabel='Time (s)')
 
-    # filename = FIGURE_PATH + "triangle_02_l2_time_boxplot.pgf"
-    # single_boxplot(paths,
-    #                xticklabels,
-    #                key="time",
-    #                result_key="L2",
-    #                xlabel="Distance traveled by moved point in length units",
-    #                ylabel='Time (s)',
-    #                title='L2 runtime',
-    #                filename=filename)
+    filename = FIGURE_PATH + "triangle_02_l2_time_boxplot.pgf"
+    single_boxplot(paths,
+                   xticklabels,
+                   key="time",
+                   result_key="L2",
+                   xlabel="Distance traveled by moved point in length units",
+                   ylabel='Time (s)',
+                   title='L2 runtime',
+                   filename=filename)
 
 
 def triangle_02_barplots():
@@ -364,30 +364,23 @@ def pentagon_01_boxplots():
 
     # norm plot settings
     xticklabels = ['1', '2', '3', '4', '5']
-    filename = FIGURE_PATH + "pentagon_01_l2_norm_boxplot.pgf"
-    two_boxplots(paths,
-                 xticklabels,
-                 key="l2_norm",
-                 xlabel="Number of angle constraints",
-                 ylabel='$l_2$ norm',
-                 filename=filename)
-
-    # filename = FIGURE_PATH + "pentagon_01_l2_time_boxplot.pgf"
+    # filename = FIGURE_PATH + "pentagon_01_l2_norm_boxplot.pgf"
     # two_boxplots(paths,
     #              xticklabels,
-    #              key="time",
+    #              key="l2_norm",
     #              xlabel="Number of angle constraints",
-    #              ylabel='Time (s)',
+    #              ylabel='$l_2$ norm',
     #              filename=filename)
 
-    # single_boxplot(paths,
-    #                xticklabels,
-    #                key="time",
-    #                result_key="L2",
-    #                xlabel="Number of angle constraints",
-    #                ylabel='Time (s)',
-    #                title='L2 runtime',
-    #                filename=filename)
+    filename = FIGURE_PATH + "pentagon_01_l2_time_boxplot.pgf"
+    single_boxplot(paths,
+                   xticklabels,
+                   key="time",
+                   result_key="L2",
+                   xlabel="Number of angle constraints",
+                   ylabel='Time (s)',
+                   title='L2 runtime',
+                   filename=filename)
 
 
 def pentagon_01_barplots():
@@ -420,12 +413,77 @@ def pentagon_01_barplots():
                          filename=filename)
 
 
+def pentagon_02_runtime_boxplot():
+    """Creates a boxplot for pentagon 02 time values."""
+    path = Path("/home/nathan/Uni-Stuff/CG/Adjacent/data/pentagon/02/")
+    results, avg = get_results_from_dir(path)
+    # pprint.pprint(results)
+    filename = FIGURE_PATH + "pentagon_02_timing_boxplot.pgf"
+    two_boxplots([path], [],
+                 key="time",
+                 xlabel="",
+                 ylabel='Time (s)',
+                 two_row=False,
+                 filename=filename)
+
+
+def pentagon_02_barplots():
+    """Barplot for pentagon 02 data"""
+    path = Path("/home/nathan/Uni-Stuff/CG/Adjacent/data/pentagon/02/")
+    # find_not_converged_results(path)
+
+    # filename = FIGURE_PATH + "pentagon_02_steps_barplot.pgf"
+    # two_row_barplot(path,
+    #                 key="steps",
+    #                 xlabel="Newton-Steps",
+    #                 ylabel="Frequency",
+    #                 filename=filename,
+    #                 is_printing=True)
+
+    filename = FIGURE_PATH + "pentagon_02_sparsity_barplot.pgf"
+    two_row_barplot(path,
+                    key="non_zero_results",
+                    xlabel="Non-zero results (Sparsity)",
+                    ylabel="Frequency",
+                    filename=filename,
+                    is_printing=True)
+
+
+def pentagon_02_norms_boxplot():
+    """Creates a boxplot for pentagon 02 norm values."""
+    filename = FIGURE_PATH + "pentagon_02_norms_boxplot.pgf"
+    path = Path("/home/nathan/Uni-Stuff/CG/Adjacent/data/pentagon/02/")
+    results, avg = get_results_from_dir(path)
+    # pprint.pprint(results)
+
+    l1_l1_norm = results["l1_norm"]["L1"]
+    l1_l2_norm = results["l2_norm"]["L1"]
+
+    l2_l1_norm = results["l1_norm"]["L2"]
+    l2_l2_norm = results["l2_norm"]["L2"]
+
+    fig = plt.figure()
+    fig.set_tight_layout(True)
+    fig.set_size_inches(SIZE, forward=True)
+    ax = fig.add_subplot(121)
+    ax.boxplot([l1_l1_norm, l2_l1_norm], whis=(0, 100))
+    ax.set_title('$l_1$ norm of offset')
+    ax.set_xticklabels(['L1', 'L2'])
+    ax = fig.add_subplot(122)
+    ax.boxplot([l1_l2_norm, l2_l2_norm], whis=(0, 100))
+    ax.set_title('$l_2$ norm of offset')
+    ax.set_xticklabels(['L1', 'L2'])
+
+    plt.savefig(filename, format="pgf")
+    plt.show()
+
+
 if __name__ == '__main__':
     # results, avg = get_results_from_dir(
     #     Path("/home/nathan/Uni-Stuff/CG/Adjacent/data/triangle/02/length_5"))
     # pprint.pprint(avg)
-    find_not_converged_results(
-        Path("/home/nathan/Uni-Stuff/CG/Adjacent/data/pentagon/02"), True)
+    # find_not_converged_results(
+    #    Path("/home/nathan/Uni-Stuff/CG/Adjacent/data/pentagon/02"), True)
     # triangle_01_runtime_boxplot()
     # triangle_01_norms_boxplot()
     # triangle_01_barplots()
@@ -433,3 +491,6 @@ if __name__ == '__main__':
     # triangle_02_barplots()
     # pentagon_01_boxplots()
     # pentagon_01_barplots()
+    # pentagon_02_runtime_boxplot()
+    pentagon_02_barplots()
+    # pentagon_02_norms_boxplot()
